@@ -35,4 +35,10 @@ export const ProductoArray = [
     precio: 229.0,
     material: "Melamine",
   },
+  {
+    key: "dc15d599-7ace-4c78-bb07-747cfac8d611",
+    titulo: "Puerta trasera de madera caoba para exteriores",
+    precio: 129.0,
+    material: "Caoba",
+  },
 ];
