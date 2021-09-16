@@ -15,6 +15,11 @@ import {
 import React, { useState } from "react";
 import useStyles from "../../theme/useStyles";
 import { Link } from "react-router-dom";
+import MenuCliente from "./desktop/MenuCliente";
+import MenuAdmin from "./desktop/MenuAdmin";
+import MenuMovil from "./movil/MenuMovil";
+import MenuMovilPublico from "./movil/MenuMovilPublico";
+import MenuPublico from "./desktop/MenuPublico";
 
 const MenuAppBar = () => {
   const [open, setOpen] = useState(false);
@@ -41,40 +46,8 @@ const MenuAppBar = () => {
             <Drawer open={open} onClose={closeToggle}>
               <div className={classes.list}>
                 <List>
-                  <ListItem
-                    button
-                    onClick={closeToggle}
-                    className={classes.listItem}
-                  >
-                    <Link
-                      to="/login"
-                      color="inherit"
-                      className={classes.linkAppBarMobile}
-                      underline="none"
-                    >
-                      <ListItemIcon className={classes.listItemIcon}>
-                        <Icon>person</Icon>
-                      </ListItemIcon>
-                      <ListItemText>Login</ListItemText>
-                    </Link>
-                  </ListItem>
-                  <ListItem
-                    button
-                    onClick={closeToggle}
-                    className={classes.listItem}
-                  >
-                    <Link
-                      to="/contact"
-                      color="inherit"
-                      className={classes.linkAppBarMobile}
-                      underline="none"
-                    >
-                      <ListItemIcon className={classes.listItemIcon}>
-                        <Icon>contact_page</Icon>
-                      </ListItemIcon>
-                      <ListItemText>Contact</ListItemText>
-                    </Link>
-                  </ListItem>
+                  {/* <MenuMovilPublico clickHandler={closeToggle} /> */}
+                  <MenuMovil clickHandler={closeToggle} />
                 </List>
               </div>
             </Drawer>
@@ -103,17 +76,9 @@ const MenuAppBar = () => {
                   CONTACT
                 </Link>
               </Button>
-              <Button color="inherit" className={classes.buttonIcon}>
-                <Link
-                  to="/login"
-                  color="inherit"
-                  underline="none"
-                  className={classes.linkAppBarDesktop}
-                >
-                  <Icon className={classes.mr}>person</Icon>
-                  LOGIN
-                </Link>
-              </Button>
+              {/* <MenuPublico /> */}
+              <MenuCliente />
+              <MenuAdmin />
             </div>
           </Toolbar>
         </Container>
