@@ -8,17 +8,42 @@ import {
   Grid,
   Typography,
 } from "@material-ui/core";
-import React from "react";
+import React, { useEffect, useState } from "react";
+import { getProductos } from "../../actions/ProductoAction";
 import useStyles from "../../theme/useStyles";
 import { ProductoArray } from "../data/dataPrueba";
 
 const Productos = (props) => {
   const classes = useStyles();
 
+  const [paginadorProductos, setPaginadorProductos] = useState({
+    count: 0,
+    pageIndex: 0,
+    pageSize: 0,
+    pageCount: 0,
+    data: [],
+  });
+
+  useEffect(() => {
+    const getListaProductos = async () => {
+      const response = await getProductos();
+      setPaginadorProductos(response.data);
+    };
+
+    getListaProductos();
+  }, []);
+
   const miArray = ProductoArray;
+
   const verProducto = (id) => {
     props.history.push("/detalleProducto/" + id);
   };
+
+  if (!paginadorProductos.data) {
+    return null;
+  }
+
+  console.log(paginadorProductos.data);
 
   return (
     <Container className={classes.containermt}>
@@ -26,8 +51,8 @@ const Productos = (props) => {
         Productos
       </Typography>
       <Grid container spacing={4}>
-        {miArray.map((data) => (
-          <Grid item lg={3} md={4} sm={6} xs={12} key={data.key}>
+        {paginadorProductos.data.map((data) => (
+          <Grid item lg={3} md={4} sm={6} xs={12} key={data.id}>
             <Card style={{ height: 405 }}>
               <CardMedia
                 className={classes.media}
@@ -40,10 +65,10 @@ const Productos = (props) => {
               </CardMedia>
               <CardContent>
                 <Typography variant="h6" className={classes.text_card}>
-                  {data.titulo}
+                  {data.nombre}
                 </Typography>
                 <Button
-                  onClick={() => verProducto(data.key)}
+                  onClick={() => verProducto(data.id)}
                   variant="contained"
                   color="primary"
                   fullWidth

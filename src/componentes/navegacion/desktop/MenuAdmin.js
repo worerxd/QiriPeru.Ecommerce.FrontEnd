@@ -1,11 +1,4 @@
-import {
-  Avatar,
-  Button,
-  Icon,
-  ListItemIcon,
-  Menu,
-  MenuItem,
-} from "@material-ui/core";
+import { Button, Icon, ListItemIcon, Menu, MenuItem } from "@material-ui/core";
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import useStyles from "../../../theme/useStyles";
