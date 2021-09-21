@@ -8,21 +8,32 @@ import {
   IconButton,
   MenuItem,
   Paper,
+  Select,
   Table,
   TableBody,
   TableCell,
   TableContainer,
   TableRow,
-  TextField,
   Typography,
 } from "@material-ui/core";
 import React from "react";
+import { useStateValue } from "../../contexto/store";
 import useStyles from "../../theme/useStyles";
 import { ProductoArray } from "../data/dataPrueba";
 
 const CarritoCompras = (props) => {
-  const miArray = ProductoArray;
   const classes = useStyles();
+  const [{ sesionCarritoCompra }, dispatch] = useStateValue();
+
+  console.log("sesionCarritoCompra", sesionCarritoCompra);
+
+  const miArray = sesionCarritoCompra
+    ? sesionCarritoCompra.items
+    : []; /* ProductoArray */
+  let suma = 0;
+  miArray.forEach((prod) => {
+    suma += prod.precio * prod.cantidad;
+  });
 
   const realizarCompra = () => {
     props.history.push("/procesoCompra");
@@ -38,33 +49,29 @@ const CarritoCompras = (props) => {
           <TableContainer>
             <Table>
               <TableBody>
-                {miArray.map((producto) => (
-                  <TableRow key={producto.key}>
+                {miArray.map((item) => (
+                  <TableRow key={item.id}>
                     <TableCell>
                       <CardMedia
                         className={classes.imgProductoCC}
                         image="http://standsyexpos.com/wp-content/gallery/escritorios-gamer/Become-con-repisas.png"
-                        title="imagen en carrito"
+                        title={item.producto}
                       />
                     </TableCell>
                     <TableCell>
                       <Typography className={classes.text_detalle}>
-                        {producto.titulo}
+                        {item.producto}
                       </Typography>
                     </TableCell>
                     <TableCell>
                       <Typography className={classes.text_detalle}>
-                        S/{producto.precio}
+                        S/{item.precio}
                       </Typography>
                     </TableCell>
                     <TableCell>
-                      <TextField select variant="outlined" size="small">
-                        <MenuItem value={1}>1</MenuItem>
-                        <MenuItem value={2}>2</MenuItem>
-                        <MenuItem value={3}>3</MenuItem>
-                        <MenuItem value={4}>4</MenuItem>
-                        <MenuItem value={5}>5</MenuItem>
-                      </TextField>
+                      <Typography className={classes.text_detalle}>
+                        {item.cantidad}
+                      </Typography>
                     </TableCell>
                     <TableCell>
                       <IconButton>
@@ -82,7 +89,9 @@ const CarritoCompras = (props) => {
             <Typography variant="h6" className={classes.text_title}>
               SUBTOTAL ({miArray.length}) PRODUCTOS
             </Typography>
-            <Typography className={classes.text_title}>S/123</Typography>
+            <Typography className={classes.text_title}>
+              S/.{Math.round(suma * 100) / 100}
+            </Typography>
             <Divider className={classes.gridmb} />
             <Grid className={classes.gridPaperCarrito}>
               <Button

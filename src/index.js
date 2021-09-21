@@ -3,9 +3,14 @@ import ReactDOM from "react-dom";
 import "./index.css";
 import App from "./App";
 import reportWebVitals from "./reportWebVitals";
+import { StateProvider } from "./contexto/store";
+import { initialState } from "./contexto/initialState";
+import { mainReducer } from "./contexto/reducers";
 
 ReactDOM.render(
-  <App />,
+  <StateProvider initialState={initialState} reducer={mainReducer}>
+    <App />
+  </StateProvider>,
 
   document.getElementById("root")
 );

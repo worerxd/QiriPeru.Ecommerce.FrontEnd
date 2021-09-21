@@ -1,5 +1,5 @@
 import { ThemeProvider } from "@material-ui/core";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import theme from "./theme/theme";
 import Login from "./componentes/seguridad/Login";
 import RegistrarUsuario from "./componentes/seguridad/RegistrarUsuario";
@@ -19,8 +19,34 @@ import ListaProductos from "./componentes/pantallas/admin/ListaProductos";
 import AgregarProducto from "./componentes/pantallas/admin/AgregarProducto";
 import EditarProducto from "./componentes/pantallas/admin/EditarProducto";
 import ListaPedidos from "./componentes/pantallas/admin/ListaPedidos";
+import { getUsuario } from "./actions/UsuarioAction";
+import { useStateValue } from "./contexto/store";
+import { getCarritoCompra } from "./actions/CarritoCompraAction";
+import { v4 as uuidv4 } from "uuid";
 
 function App() {
+  const [{ sesionUsuario }, dispatch] = useStateValue();
+  const [servidorRespuesta, setServidorRespuesta] = useState(false);
+
+  useEffect(() => {
+    async function loadProgram() {
+      let carritoCompraId = window.localStorage.getItem("carrito");
+
+      if (!carritoCompraId) {
+        carritoCompraId = uuidv4();
+        window.localStorage.setItem("carrito", carritoCompraId);
+      }
+
+      if (!servidorRespuesta) {
+        await getUsuario(dispatch);
+        await getCarritoCompra(dispatch, carritoCompraId);
+        setServidorRespuesta(true);
+      }
+    }
+
+    loadProgram();
+  }, [servidorRespuesta]);
+
   return (
     <ThemeProvider theme={theme}>
       <Router>

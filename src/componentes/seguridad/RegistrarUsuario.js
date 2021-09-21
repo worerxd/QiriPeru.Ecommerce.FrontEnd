@@ -11,20 +11,17 @@ import {
 import React, { useState } from "react";
 import useStyles from "../../theme/useStyles";
 import { Link } from "react-router-dom";
+import { registrarUsuario } from "../../actions/UsuarioAction";
+import { useStateValue } from "../../contexto/store";
 
-const clearUsuario = {
-  nombre: "",
-  apellidos: "",
-  email: "",
-  password: "",
-};
-
-const RegistrarUsuario = () => {
+const RegistrarUsuario = (props) => {
+  const [{ sesionUsuario }, dispatch] = useStateValue();
   const [usuario, setUsuario] = useState({
     nombre: "",
-    apellidos: "",
+    apellido: "",
     email: "",
     password: "",
+    userName: "",
   });
 
   const handleChange = (e) => {
@@ -36,8 +33,11 @@ const RegistrarUsuario = () => {
   };
 
   const guardarUsuario = () => {
-    console.log("Mi usuario es ", usuario);
-    setUsuario(clearUsuario);
+    registrarUsuario(usuario, dispatch).then((response) => {
+      console.log("Objeto response que envía el servidor", response);
+      window.localStorage.setItem("token", response.data.token);
+      props.history.push("/");
+    });
   };
 
   const classes = useStyles();
@@ -69,8 +69,18 @@ const RegistrarUsuario = () => {
                     label="Apellidos"
                     variant="outlined"
                     fullWidth
-                    name="apellidos"
-                    value={usuario.apellidos}
+                    name="apellido"
+                    value={usuario.apellido}
+                    onChange={handleChange}
+                  ></TextField>
+                </Grid>
+                <Grid item md={12} xs={12} className={classes.gridmb}>
+                  <TextField
+                    label="UserName"
+                    variant="outlined"
+                    fullWidth
+                    name="userName"
+                    value={usuario.userName}
                     onChange={handleChange}
                   ></TextField>
                 </Grid>

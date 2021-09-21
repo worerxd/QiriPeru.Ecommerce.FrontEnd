@@ -3,7 +3,6 @@ import {
   CardMedia,
   Container,
   Grid,
-  MenuItem,
   Paper,
   Table,
   TableBody,
@@ -13,20 +12,60 @@ import {
   TextField,
   Typography,
 } from "@material-ui/core";
-import React from "react";
+import React, { useEffect, useState } from "react";
+import { addItem } from "../../actions/CarritoCompraAction";
+import { getProducto } from "../../actions/ProductoAction";
 import useStyles from "../../theme/useStyles";
+import { useStateValue } from "../../contexto/store";
 
 const DetalleProducto = (props) => {
   const classes = useStyles();
 
-  const agregarCarrito = () =>{
-    props.history.push("/carrito")
-  }
+  const [{ sesionCarritoCompra }, dispatch] = useStateValue();
+  const [cantidad, setCantidad] = useState(1);
+
+  const [productoSeleccionado, setProductoSeleccionado] = useState({
+    id: 0,
+    nombre: "",
+    descripcion: "",
+    stock: 0,
+    materialId: 0,
+    materialNombre: "",
+    categoriaId: 0,
+    categoriaNombre: "",
+    precio: 0.0,
+    imagen: "",
+  });
+
+  useEffect(() => {
+    const id = props.match.params.id;
+    const getProductoAsync = async () => {
+      const response = await getProducto(id);
+      setProductoSeleccionado(response.data);
+    };
+    getProductoAsync();
+  }, [productoSeleccionado, props.match.params.id]);
+
+  const agregarCarrito = async () => {
+    const item = {
+      id: productoSeleccionado.id,
+      producto: productoSeleccionado.nombre,
+      precio: productoSeleccionado.precio,
+      cantidad: cantidad,
+      imagen: productoSeleccionado.imagen,
+      material: productoSeleccionado.materialNombre,
+      categoria: productoSeleccionado.categoriaNombre,
+    };
+
+    await addItem(sesionCarritoCompra, item, dispatch);
+
+    props.history.push("/carrito");
+  };
 
   return (
     <Container className={classes.containermt}>
       <Typography variant="h4" className={classes.text_title}>
-        PUERTA PRINCIPAL EN MADERA
+        {productoSeleccionado.nombre}
       </Typography>
       <Grid container spacing={4}>
         <Grid item lg={8} md={8} xs={12}>
@@ -35,7 +74,7 @@ const DetalleProducto = (props) => {
               style={{ width: "100%" }}
               className={classes.mediaDetalle}
               image="http://standsyexpos.com/wp-content/gallery/escritorios-gamer/Become-con-repisas.png"
-              title="mi producto"
+              title={productoSeleccionado.descripcion}
             />
           </Paper>
         </Grid>
@@ -48,7 +87,9 @@ const DetalleProducto = (props) => {
                     <Typography variant="subtitle2">Precio</Typography>
                   </TableCell>
                   <TableCell>
-                    <Typography variant="subtitle2">S/229</Typography>
+                    <Typography variant="subtitle2">
+                      S/. {productoSeleccionado.precio}
+                    </Typography>
                   </TableCell>
                 </TableRow>
                 <TableRow>
@@ -56,16 +97,26 @@ const DetalleProducto = (props) => {
                     <Typography variant="subtitle2">Cantidad</Typography>
                   </TableCell>
                   <TableCell>
-                    <TextField size="small" select variant="outlined">
-                      <MenuItem value={1}>1</MenuItem>
-                      <MenuItem value={2}>2</MenuItem>
-                      <MenuItem value={3}>3</MenuItem>
-                    </TextField>
+                    <Typography variant="subtitle2">
+                      <TextField
+                        id="cantidad-producto"
+                        label=""
+                        type="number"
+                        value={cantidad}
+                        onChange={(event) => setCantidad(event.target.value)}
+                        InputLabelProps={{ shrink: true }}
+                      />
+                    </Typography>
                   </TableCell>
                 </TableRow>
                 <TableRow>
                   <TableCell colSpan={2}>
-                    <Button onClick={agregarCarrito} variant="contained" color="primary" size="large">
+                    <Button
+                      onClick={agregarCarrito}
+                      variant="contained"
+                      color="primary"
+                      size="large"
+                    >
                       Agregar a carrito
                     </Button>
                   </TableCell>
@@ -78,16 +129,16 @@ const DetalleProducto = (props) => {
           <Grid container spacing={2}>
             <Grid item md={6}>
               <Typography className={classes.text_detalle}>
-                Precio: S/229
+                Precio: S/{productoSeleccionado.precio}
               </Typography>
               <Typography className={classes.text_detalle}>
-                Unidades Disponibles: 15
+                Unidades Disponibles: {productoSeleccionado.stock}
               </Typography>
               <Typography className={classes.text_detalle}>
-                Material: Caoba
+                Material: {productoSeleccionado.materialNombre}
               </Typography>
               <Typography className={classes.text_detalle}>
-                Categoria: Comedor
+                Categoria: {productoSeleccionado.categoriaNombre}
               </Typography>
             </Grid>
             <Grid item md={6}>
@@ -95,8 +146,7 @@ const DetalleProducto = (props) => {
                 Descripcion:
               </Typography>
               <Typography className={classes.text_detalle}>
-                Puerta de caoba, con medidas personalizadas, luis se la come y
-                raul también, alex es un chivato y esppero no la cagues
+                {productoSeleccionado.descripcion}
               </Typography>
             </Grid>
           </Grid>

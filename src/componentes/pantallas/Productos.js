@@ -8,14 +8,23 @@ import {
   Grid,
   Typography,
 } from "@material-ui/core";
+import { Pagination } from "@material-ui/lab";
 import React, { useEffect, useState } from "react";
+import { addItem } from "../../actions/CarritoCompraAction";
 import { getProductos } from "../../actions/ProductoAction";
+import { useStateValue } from "../../contexto/store";
 import useStyles from "../../theme/useStyles";
-import { ProductoArray } from "../data/dataPrueba";
 
 const Productos = (props) => {
   const classes = useStyles();
 
+  const [{ sesionCarritoCompra }, dispatch] = useStateValue();
+
+  const [requestProductos, setRequestProductos] = useState({
+    pageIndex: 1,
+    pageSize: 3,
+    search: "",
+  });
   const [paginadorProductos, setPaginadorProductos] = useState({
     count: 0,
     pageIndex: 0,
@@ -24,19 +33,25 @@ const Productos = (props) => {
     data: [],
   });
 
+  const handleChange = (event, value) => {
+    setRequestProductos((anterior) => ({
+      ...anterior,
+      pageIndex: value,
+    }));
+  };
+
   useEffect(() => {
     const getListaProductos = async () => {
-      const response = await getProductos();
+      const response = await getProductos(requestProductos);
       setPaginadorProductos(response.data);
     };
 
     getListaProductos();
-  }, []);
+  }, [requestProductos]);
 
-  const miArray = ProductoArray;
-
-  const verProducto = (id) => {
-    props.history.push("/detalleProducto/" + id);
+  const verProducto = async (item) => {
+    /* await addItem(sesionCarritoCompra, item, dispatch); */
+    props.history.push("/detalleProducto/" + item.id);
   };
 
   if (!paginadorProductos.data) {
@@ -68,7 +83,7 @@ const Productos = (props) => {
                   {data.nombre}
                 </Typography>
                 <Button
-                  onClick={() => verProducto(data.id)}
+                  onClick={() => verProducto(data)}
                   variant="contained"
                   color="primary"
                   fullWidth
@@ -80,6 +95,11 @@ const Productos = (props) => {
           </Grid>
         ))}
       </Grid>
+      <Pagination
+        count={paginadorProductos.pageCount}
+        page={paginadorProductos.pageIndex}
+        onChange={handleChange}
+      />
     </Container>
   );
 };
