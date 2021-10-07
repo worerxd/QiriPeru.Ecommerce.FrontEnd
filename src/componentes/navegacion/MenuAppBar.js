@@ -32,7 +32,14 @@ const MenuAppBar = () => {
 
   return (
     <div>
-      <AppBar position="static" className={classes.appBar}>
+      <AppBar
+        position="static"
+        className={classes.appBar}
+        style={{
+          background:
+            "radial-gradient(circle, rgba(251,198,63,1) 0%, rgba(181,70,48,1) 100%)",
+        }}
+      >
         <Container>
           <Toolbar>
             <div className={classes.sectionMobile}>

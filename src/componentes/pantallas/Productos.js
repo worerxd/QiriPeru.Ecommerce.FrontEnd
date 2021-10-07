@@ -2,6 +2,7 @@ import {
   Avatar,
   Button,
   Card,
+  CardActions,
   CardContent,
   CardMedia,
   Container,
@@ -68,10 +69,17 @@ const Productos = (props) => {
       <Grid container spacing={4}>
         {paginadorProductos.data.map((data) => (
           <Grid item lg={3} md={4} sm={6} xs={12} key={data.id}>
-            <Card style={{ height: 405 }}>
+            <Card
+              style={{ height: 360, display: "flex", flexDirection: "column" }}
+            >
               <CardMedia
                 className={classes.media}
-                image="http://standsyexpos.com/wp-content/gallery/escritorios-gamer/Become-con-repisas.png"
+                height="150"
+                image={
+                  data.imagen
+                    ? data.imagen
+                    : "http://standsyexpos.com/wp-content/gallery/escritorios-gamer/Become-con-repisas.png"
+                }
                 title="mi producto"
               >
                 <Avatar className={classes.price} variant="square">
@@ -79,18 +87,30 @@ const Productos = (props) => {
                 </Avatar>
               </CardMedia>
               <CardContent>
-                <Typography variant="h6" className={classes.text_card}>
+                <Typography
+                  variant="h6"
+                  className={classes.text_card}
+                  // style={{
+                  //   fontSize: data.nombre.length > 48 ? "1rem" : "1.5rem",
+                  // }}
+                >
                   {data.nombre}
                 </Typography>
+              </CardContent>
+              <CardActions style={{ margin: "auto 5px 5px 5px" }}>
                 <Button
                   onClick={() => verProducto(data)}
                   variant="contained"
                   color="primary"
                   fullWidth
+                  style={{
+                    background:
+                      "radial-gradient(circle, rgba(251,198,63,1) 0%, rgba(181,70,48,1) 100%)",
+                  }}
                 >
                   MÁS DETALLES
                 </Button>
-              </CardContent>
+              </CardActions>
             </Card>
           </Grid>
         ))}

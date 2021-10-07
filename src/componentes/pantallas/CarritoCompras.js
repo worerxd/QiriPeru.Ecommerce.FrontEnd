@@ -54,7 +54,11 @@ const CarritoCompras = (props) => {
                     <TableCell>
                       <CardMedia
                         className={classes.imgProductoCC}
-                        image="http://standsyexpos.com/wp-content/gallery/escritorios-gamer/Become-con-repisas.png"
+                        image={
+                          item.imagen
+                            ? item.imagen
+                            : "http://standsyexpos.com/wp-content/gallery/escritorios-gamer/Become-con-repisas.png"
+                        }
                         title={item.producto}
                       />
                     </TableCell>

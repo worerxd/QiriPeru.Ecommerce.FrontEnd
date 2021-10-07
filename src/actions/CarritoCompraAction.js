@@ -1,4 +1,3 @@
-import HttpCliente from "../servicios/HttpCliente";
 import axios from "axios";
 
 const instancia = axios.create();

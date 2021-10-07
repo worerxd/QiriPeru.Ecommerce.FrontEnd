@@ -14,12 +14,83 @@ import {
   TextField,
   Typography,
 } from "@material-ui/core";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import useStyles from "../../theme/useStyles";
 import ImageUploader from "react-images-upload";
+import { useStateValue } from "../../contexto/store";
+import { v4 as uuidv4 } from "uuid";
+import { actualizarUsuario } from "../../actions/UsuarioAction";
+import { withRouter } from "react-router-dom";
 
 const Perfil = (props) => {
   const classes = useStyles();
+
+  const imagenDefault =
+    "https://www.pngfind.com/pngs/m/470-4703547_icon-user-icon-hd-png-download.png";
+
+  const [{ sesionUsuario }, dispatch] = useStateValue();
+  const [usuario, setUsuario] = useState({
+    id: "",
+    nombre: "",
+    apellido: "",
+    imagen: "",
+    email: "",
+    password: "",
+    file: "",
+    imagenTemporal: "",
+  });
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setUsuario((prev) => ({
+      ...prev,
+      [name]: value,
+    }));
+  };
+
+  useEffect(() => {
+    if (sesionUsuario) {
+      setUsuario(sesionUsuario.usuario);
+    }
+  }, [sesionUsuario]);
+
+  const subirImagen = (imagenes) => {
+    let foto = imagenes[0];
+    let fotoUrl = "";
+    try {
+      fotoUrl = URL.createObjectURL(foto);
+    } catch (e) {
+      console.log(e);
+    }
+
+    setUsuario((prev) => ({
+      ...prev,
+      file: foto,
+      imagenTemporal: fotoUrl,
+    }));
+  };
+
+  const guardarUsuario = (e) => {
+    e.preventDefault();
+    actualizarUsuario(sesionUsuario.usuario.id, usuario, dispatch).then(
+      (response) => {
+        if (response.status === 200) {
+          window.localStorage.setItem("token", response.data.token);
+          props.history.push("/");
+        } else {
+          dispatch({
+            type: "OPEN_SNACKBAR",
+            openMensaje: {
+              open: true,
+              mensaje: "Errores actualizando el perfil de usuario",
+            },
+          });
+        }
+      }
+    );
+  };
+
+  const keyImage = uuidv4();
 
   const verDetalles = () => {
     const id = "4f640d35-2b7b-423a-b4a2-b6715b9765bf";
@@ -35,6 +106,8 @@ const Perfil = (props) => {
           </Typography>
           <form onSubmit={(e) => e.preventDefault()} className={classes.form}>
             <ImageUploader
+              key={keyImage}
+              onChange={subirImagen}
               withIcon={false}
               buttonStyles={{
                 borderRadius: "50%",
@@ -50,7 +123,13 @@ const Perfil = (props) => {
                 <Avatar
                   alt="mi perfil"
                   className={classes.avatarPerfil}
-                  src="https://scontent.flim19-1.fna.fbcdn.net/v/t1.6435-9/97064433_10222786013588766_3925447160463622144_n.jpg?_nc_cat=104&ccb=1-5&_nc_sid=09cbfe&_nc_eui2=AeHpffQEcUwlaeubfrw35GRVuR65ZYgwK1e5HrlliDArV2LRSBy9ZhwZb2PCk7_OyFo&_nc_ohc=0vrfgNoQgkUAX_FEp9F&tn=suglAIaarO9sWgnD&_nc_ht=scontent.flim19-1.fna&oh=71e303d0f2d8e14bb15669831178dce6&oe=61652FFD"
+                  src={
+                    usuario.imagenTemporal
+                      ? usuario.imagenTemporal
+                      : usuario.imagen
+                      ? usuario.imagen
+                      : imagenDefault
+                  }
                 />
               }
               imgExtension={[".jpg", ".gif", ".png", ".jpeg"]}
@@ -61,21 +140,27 @@ const Perfil = (props) => {
               variant="outlined"
               fullWidth
               className={classes.gridmb}
-              value="Walther"
+              name="nombre"
+              value={usuario.nombre}
+              onChange={handleChange}
             />
             <TextField
               label="Apellidos"
               variant="outlined"
               fullWidth
               className={classes.gridmb}
-              value="Vergaray"
+              name="apellido"
+              value={usuario.apellido}
+              onChange={handleChange}
             />
             <TextField
               label="Correo Electrónico"
               variant="outlined"
               fullWidth
               className={classes.gridmb}
-              value="walther.vergaray@gmail.com"
+              name="email"
+              value={usuario.email}
+              onChange={handleChange}
             />
             <Divider className={classes.divider} />
             <TextField
@@ -90,7 +175,11 @@ const Perfil = (props) => {
               fullWidth
               className={classes.gridmb}
             />
-            <Button variant="contained" color="primary">
+            <Button
+              variant="contained"
+              color="primary"
+              onClick={guardarUsuario}
+            >
               ACTUALIZAR
             </Button>
           </form>
@@ -136,4 +225,4 @@ const Perfil = (props) => {
   );
 };
 
-export default Perfil;
+export default withRouter(Perfil);

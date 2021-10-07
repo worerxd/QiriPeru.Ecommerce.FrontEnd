@@ -9,14 +9,18 @@ import {
   ListItemText,
 } from "@material-ui/core";
 import React, { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, withRouter } from "react-router-dom";
+import { useStateValue } from "../../../contexto/store";
 import useStyles from "../../../theme/useStyles";
 
 const MenuMovil = (props) => {
   const classes = useStyles();
+  const imagenDefault =
+    "https://www.pngfind.com/pngs/m/470-4703547_icon-user-icon-hd-png-download.png";
 
   const [openCliente, setOpenCliente] = useState(false);
   const [openAdmin, setOpenAdmin] = useState(false);
+  const [{ sesionUsuario }, dispatch] = useStateValue();
 
   const handleClickCliente = () => {
     setOpenCliente((prevOpen) => !prevOpen);
@@ -24,6 +28,19 @@ const MenuMovil = (props) => {
   const handleClickAdmin = () => {
     setOpenAdmin((prevOpen) => !prevOpen);
   };
+
+  const salirSesion = (e) => {
+    e.preventDefault();
+    localStorage.removeItem("token");
+    dispatch({
+      type: "SALIR_SESION",
+      nuevoUsuario: null,
+      autenticado: false,
+    });
+
+    props.history.push("/login");
+  };
+
   return (
     <>
       <ListItem
@@ -35,9 +52,23 @@ const MenuMovil = (props) => {
           <Avatar
             alt="mi imagen"
             className={classes.avatarPerfilAppbar}
-            src="https://scontent.flim19-1.fna.fbcdn.net/v/t1.6435-9/97064433_10222786013588766_3925447160463622144_n.jpg?_nc_cat=104&ccb=1-5&_nc_sid=09cbfe&_nc_eui2=AeHpffQEcUwlaeubfrw35GRVuR65ZYgwK1e5HrlliDArV2LRSBy9ZhwZb2PCk7_OyFo&_nc_ohc=0vrfgNoQgkUAX_FEp9F&tn=suglAIaarO9sWgnD&_nc_ht=scontent.flim19-1.fna&oh=71e303d0f2d8e14bb15669831178dce6&oe=61652FFD"
+            src={
+              sesionUsuario
+                ? sesionUsuario.usuario.imagen
+                  ? sesionUsuario.usuario.imagen
+                  : imagenDefault
+                : imagenDefault
+            }
           />
-          <ListItemText>Walther Vergaray</ListItemText>
+          <ListItemText>
+            {sesionUsuario
+              ? sesionUsuario.autenticado
+                ? sesionUsuario.usuario.nombre +
+                  " " +
+                  sesionUsuario.usuario.apellido
+                : " "
+              : "No sesión"}
+          </ListItemText>
           <Icon>keyboard_arrow_down</Icon>
         </div>
       </ListItem>
@@ -64,7 +95,9 @@ const MenuMovil = (props) => {
               <ListItemIcon className={classes.listItemIcon}>
                 <Icon>exit_to_app</Icon>
               </ListItemIcon>
-              <ListItemText>Cerrar Sesión</ListItemText>
+              <ListItem button onClick={salirSesion}>
+                <ListItemText>Cerrar Sesión</ListItemText>
+              </ListItem>
             </Link>
           </ListItem>
           <Divider />
@@ -141,4 +174,4 @@ const MenuMovil = (props) => {
   );
 };
 
-export default MenuMovil;
+export default withRouter(MenuMovil);

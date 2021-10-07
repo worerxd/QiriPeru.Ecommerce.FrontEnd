@@ -73,7 +73,11 @@ const DetalleProducto = (props) => {
             <CardMedia
               style={{ width: "100%" }}
               className={classes.mediaDetalle}
-              image="http://standsyexpos.com/wp-content/gallery/escritorios-gamer/Become-con-repisas.png"
+              image={
+                productoSeleccionado.imagen
+                  ? productoSeleccionado.imagen
+                  : "http://standsyexpos.com/wp-content/gallery/escritorios-gamer/Become-con-repisas.png"
+              }
               title={productoSeleccionado.descripcion}
             />
           </Paper>

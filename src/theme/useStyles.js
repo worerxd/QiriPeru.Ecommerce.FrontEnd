@@ -98,7 +98,7 @@ const useStyles = makeStyles({
     marginBottom: 10,
   },
   media: {
-    height: 250,
+    height: 150,
     backgroundColor: "#F2F2F2",
     margin: "15px 15px 0 15px",
   },
@@ -144,7 +144,9 @@ const useStyles = makeStyles({
     marginRight: 8,
   },
   formControl: {
-    margin: 12,
+    // margin: 12,
+    margin: theme.spacing(1),
+    minWidth: 120,
   },
   gridLR: {
     paddingLeft: 30,
@@ -213,7 +215,7 @@ const useStyles = makeStyles({
     float: "right",
   },
   avatarProducto: {
-    width: 175,
+    width: "100%",
     height: 175,
     backgroundColor: "#F2F2F2",
   },
