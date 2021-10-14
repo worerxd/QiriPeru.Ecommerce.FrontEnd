@@ -23,7 +23,7 @@ const Productos = (props) => {
 
   const [requestProductos, setRequestProductos] = useState({
     pageIndex: 1,
-    pageSize: 3,
+    pageSize: 8,
     search: "",
   });
   const [paginadorProductos, setPaginadorProductos] = useState({
@@ -96,6 +96,10 @@ const Productos = (props) => {
                 >
                   {data.nombre}
                 </Typography>
+                <Typography
+                  className={classes.text_card}
+                  style={{ display: "flex", color: "gray" }}
+                ></Typography>
               </CardContent>
               <CardActions style={{ margin: "auto 5px 5px 5px" }}>
                 <Button
@@ -103,10 +107,6 @@ const Productos = (props) => {
                   variant="contained"
                   color="primary"
                   fullWidth
-                  style={{
-                    background:
-                      "radial-gradient(circle, rgba(251,198,63,1) 0%, rgba(181,70,48,1) 100%)",
-                  }}
                 >
                   MÁS DETALLES
                 </Button>

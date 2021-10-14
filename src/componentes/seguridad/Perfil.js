@@ -124,10 +124,12 @@ const Perfil = (props) => {
                   alt="mi perfil"
                   className={classes.avatarPerfil}
                   src={
-                    usuario.imagenTemporal
+                    usuario
                       ? usuario.imagenTemporal
-                      : usuario.imagen
-                      ? usuario.imagen
+                        ? usuario.imagenTemporal
+                        : usuario.imagen
+                        ? usuario.imagen
+                        : imagenDefault
                       : imagenDefault
                   }
                 />
@@ -141,7 +143,7 @@ const Perfil = (props) => {
               fullWidth
               className={classes.gridmb}
               name="nombre"
-              value={usuario.nombre}
+              value={usuario ? usuario.nombre : ""}
               onChange={handleChange}
             />
             <TextField
@@ -150,7 +152,7 @@ const Perfil = (props) => {
               fullWidth
               className={classes.gridmb}
               name="apellido"
-              value={usuario.apellido}
+              value={usuario ? usuario.apellido : ""}
               onChange={handleChange}
             />
             <TextField
@@ -159,7 +161,7 @@ const Perfil = (props) => {
               fullWidth
               className={classes.gridmb}
               name="email"
-              value={usuario.email}
+              value={usuario ? usuario.email : ""}
               onChange={handleChange}
             />
             <Divider className={classes.divider} />

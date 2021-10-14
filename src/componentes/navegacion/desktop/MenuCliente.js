@@ -37,7 +37,7 @@ const MenuCliente = (props) => {
       nuevoUsuario: null,
       autenticado: false,
     });
-
+    console.log("sesion: ", sesionUsuario.usuario);
     props.history.push("/login");
   };
 
@@ -61,12 +61,15 @@ const MenuCliente = (props) => {
               className={classes.avatarPerfilAppbar}
               src={
                 sesionUsuario
-                  ? sesionUsuario.usuario.imagen
+                  ? sesionUsuario.usuario
                     ? sesionUsuario.usuario.imagen
+                      ? sesionUsuario.usuario.imagen
+                      : imagenDefault
                     : imagenDefault
                   : imagenDefault
               }
             />
+
             {sesionUsuario
               ? sesionUsuario.autenticado
                 ? sesionUsuario.usuario.userName

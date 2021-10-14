@@ -10,16 +10,48 @@ import {
   TableRow,
   Typography,
 } from "@material-ui/core";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import useStyles from "../../../theme/useStyles";
+import { getUsuarios } from "../../../actions/UsuarioAction";
+import { Pagination } from "@material-ui/lab";
+import { withRouter } from "react-router-dom";
 
 const Usuarios = (props) => {
   const classes = useStyles();
 
-  const editaUsuario = () => {
-    const id = "a646154d-9dcc-41ab-87d6-f6bd751e7bf9";
+  const [requestUsuarios, setRequestUsuarios] = useState({
+    pageIndex: 1,
+    pageSize: 5,
+    search: "",
+  });
+
+  const [paginadorUsuarios, setPaginadorUsuarios] = useState({
+    count: 0,
+    pageIndex: 0,
+    pageSize: 0,
+    pageCount: 0,
+    data: [],
+  });
+
+  const handleChange = (event, value) => {
+    setRequestUsuarios((anterior) => ({
+      ...anterior,
+      pageIndex: value,
+    }));
+  };
+
+  const editaUsuario = (id) => {
     props.history.push("/admin/usuario/" + id);
   };
+
+  useEffect(() => {
+    const getListaUsuarios = async () => {
+      const response = await getUsuarios(requestUsuarios);
+      setPaginadorUsuarios(response.data);
+    };
+
+    getListaUsuarios();
+  }, [requestUsuarios]);
 
   return (
     <Container className={classes.containermt}>
@@ -33,56 +65,39 @@ const Usuarios = (props) => {
               <TableCell>ID</TableCell>
               <TableCell>USUARIO</TableCell>
               <TableCell>EMAIL</TableCell>
-              <TableCell>ADMIN</TableCell>
+              <TableCell>USERNAME</TableCell>
               <TableCell></TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
-            <TableRow>
-              <TableCell>a646154d-9dcc-41ab-87d6-f6bd751e7bf9</TableCell>
-              <TableCell>Walther Vergaray</TableCell>
-              <TableCell>walther.vergaray@gmail.com</TableCell>
-              <TableCell>
-                <Icon className={classes.iconDelivered}>check</Icon>
-              </TableCell>
-              <TableCell>
-                <Button
-                  variant="contained"
-                  color="primary"
-                  onClick={editaUsuario}
-                >
-                  <Icon>edit</Icon>
-                </Button>
-                <Button variant="contained" color="secondary">
-                  <Icon>delete</Icon>
-                </Button>
-              </TableCell>
-            </TableRow>
-            <TableRow>
-              <TableCell>da042fc2-7776-4179-8ec6-5214acfa49bf</TableCell>
-              <TableCell>Luis Baldeon</TableCell>
-              <TableCell>luis.baldeon@gmail.com</TableCell>
-              <TableCell>
-                <Icon className={classes.iconNotDelivered}>clear</Icon>
-              </TableCell>
-              <TableCell>
-                <Button
-                  variant="contained"
-                  color="primary"
-                  onClick={editaUsuario}
-                >
-                  <Icon>edit</Icon>
-                </Button>
-                <Button variant="contained" color="secondary">
-                  <Icon>delete</Icon>
-                </Button>
-              </TableCell>
-            </TableRow>
+            {paginadorUsuarios.data.map((usuario) => (
+              <TableRow key={usuario.id}>
+                <TableCell>{usuario.id}</TableCell>
+                <TableCell>{usuario.nombre + " " + usuario.apellido}</TableCell>
+                <TableCell>{usuario.email}</TableCell>
+                <TableCell>{usuario.userName}</TableCell>
+                <TableCell>
+                  <Button
+                    variant="contained"
+                    color="primary"
+                    onClick={() => editaUsuario(usuario.id)}
+                  >
+                    <Icon>edit</Icon>
+                  </Button>
+                </TableCell>
+              </TableRow>
+            ))}
           </TableBody>
         </Table>
       </TableContainer>
+      <Pagination
+        count={paginadorUsuarios.pageCount}
+        page={paginadorUsuarios.pageIndex}
+        size="small"
+        onChange={handleChange}
+      />
     </Container>
   );
 };
 
-export default Usuarios;
+export default withRouter(Usuarios);

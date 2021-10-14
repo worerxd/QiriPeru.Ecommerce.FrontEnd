@@ -8,11 +8,64 @@ import {
   TextField,
   Typography,
 } from "@material-ui/core";
-import React from "react";
+import React, { useEffect, useState } from "react";
+import { agregarRol, getUsuarioById } from "../../../actions/UsuarioAction";
 import useStyles from "../../../theme/useStyles";
+import { withRouter } from "react-router-dom";
+import { useStateValue } from "../../../contexto/store";
 
-const EditarUsuario = () => {
+const EditarUsuario = (props) => {
   const classes = useStyles();
+
+  const [{ sesionUsuario }, dispatch] = useStateValue();
+
+  const [usuario, setUsuario] = useState({
+    nombre: "",
+    apellido: "",
+    email: "",
+  });
+
+  const [admin, setAdmin] = useState(false);
+
+  const handleChange = (e) => {
+    setAdmin(e.target.checked);
+  };
+
+  useEffect(() => {
+    const id = props.match.params.id;
+
+    const getUsuarioIdAsync = async () => {
+      const response = await getUsuarioById(id);
+      setAdmin(response.data.admin);
+      setUsuario(response.data);
+    };
+
+    getUsuarioIdAsync();
+  }, []);
+
+  const actualizarRoleUsuario = async (e) => {
+    e.preventDefault();
+    const id = props.match.params.id;
+    const role = {
+      nombre: "ADMIN",
+      status: admin,
+    };
+
+    const response = await agregarRol(id, role, dispatch);
+
+    if (response.status === 200) {
+      props.history.push("/admin/usuarios");
+    } else {
+      dispatch({
+        type: "OPEN_SNACKBAR",
+        openMensaje: {
+          open: true,
+          mensaje: "No es posible agregar este rol admin",
+        },
+      });
+    }
+  };
+
   return (
     <Container className={classes.containermt}>
       <Grid container justifyContent="center">
@@ -24,7 +77,7 @@ const EditarUsuario = () => {
             <TextField
               label="Nombre"
               variant="filled"
-              value="Walther Vergaray"
+              value={usuario.nombre + " " + usuario.apellido}
               fullWidth
               disabled
               className={classes.gridmb}
@@ -32,7 +85,7 @@ const EditarUsuario = () => {
             <TextField
               label="Correo Electrónico"
               variant="filled"
-              value="walther.vergaray@gmail.com"
+              value={usuario.email}
               fullWidth
               disabled
             />
@@ -40,9 +93,15 @@ const EditarUsuario = () => {
               <FormControlLabel
                 control={<Checkbox color="primary" />}
                 label="Es Administrador"
+                checked={admin}
+                onChange={handleChange}
               />
             </FormControl>
-            <Button variant="contained" color="primary">
+            <Button
+              variant="contained"
+              color="primary"
+              onClick={actualizarRoleUsuario}
+            >
               Actualizar
             </Button>
           </form>
@@ -52,4 +111,4 @@ const EditarUsuario = () => {
   );
 };
 
-export default EditarUsuario;
+export default withRouter(EditarUsuario);

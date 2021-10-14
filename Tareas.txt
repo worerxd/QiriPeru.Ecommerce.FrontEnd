@@ -1,0 +1,29 @@
+SPRINT 1.
+- Diseño: Luis Baldeon.
+- Historias de usuario: Boris Rojas.
+- Base de datos: Fabricio Quispe.
+- Programacion BackEnd/FrontEnd: Walther Vergaray.
+
+SPRINT 2.
+- Diseño: Luis Baldeon.
+- Historias de usuario: Boris Rojas.
+- Programacion BackEnd/FrontEnd: Fabricio Quispe.
+- Programacion BackEnd/FrontEnd: Walther Vergaray.
+
+SPRINT 3.
+- Diseño: Fabricio Quispe.
+- Historias de usuario: Boris Rojas.
+- Programacion BackEnd/FrontEnd: Luis Baldeon.
+- Programacion BackEnd/FrontEnd: Walther Vergaray.
+
+SPRINT 4.
+- Diseño: Luis Baldeon.
+- Historias de usuario: Boris Rojas.
+- Programacion BackEnd/FrontEnd: Fabricio Quispe.
+- Programacion BackEnd/FrontEnd: Walther Vergaray.
+
+SPRINT 5.
+- Diseño: Fabricio Quispe.
+- Historias de usuario: Boris Rojas.
+- Programacion BackEnd/FrontEnd: Luis Baldeon.
+- Programacion BackEnd/FrontEnd: Walther Vergaray.

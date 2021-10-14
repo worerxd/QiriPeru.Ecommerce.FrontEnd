@@ -54,8 +54,10 @@ const MenuMovil = (props) => {
             className={classes.avatarPerfilAppbar}
             src={
               sesionUsuario
-                ? sesionUsuario.usuario.imagen
+                ? sesionUsuario.usuario
                   ? sesionUsuario.usuario.imagen
+                    ? sesionUsuario.usuario.imagen
+                    : imagenDefault
                   : imagenDefault
                 : imagenDefault
             }
