@@ -12,7 +12,8 @@ import {
   TableRow,
   Typography,
 } from "@material-ui/core";
-import React from "react";
+import React, { useEffect, useState } from "react";
+import { getOrdenCompra } from "../../actions/OrdenCompraAction";
 import useStyles from "../../theme/useStyles";
 
 const OrdenCompra = (props) => {
@@ -22,10 +23,42 @@ const OrdenCompra = (props) => {
   const mensajeEnvio = "No entregado";
   const mensajePago = "Pagado en 2021-09-06";
 
+  const [pedido, setPedido] = useState({
+    id: 0,
+    compradorEmail: "",
+    ordenCompraFecha: "",
+    direccionEnvio: {
+      calle: "",
+      ciudad: "",
+      despartamento: "",
+      codigoPostal: "",
+      pais: "",
+    },
+    tipoEnvio: "",
+    tipoEnvioPrecio: 0,
+    ordenItems: [],
+    subTotal: 0.0,
+    total: 0.0,
+    status: "",
+  });
+
+  useEffect(() => {
+    const getOrdenCompraDetalle = async () => {
+      const response = await getOrdenCompra(id);
+      setPedido(response.data);
+    };
+
+    getOrdenCompraDetalle();
+  }, []);
+
   return (
     <Container className={classes.containermt}>
-      <Typography variant="h5" className={classes.text_title}>
-        ORDEN DE COMPRA:{id.toUpperCase()}
+      <Typography
+        variant="h5"
+        className={classes.text_title}
+        style={{ marginLeft: 20 }}
+      >
+        ORDEN DE COMPRA
       </Typography>
       <Grid container spacing={2} className={classes.papperPadding}>
         <Grid item md={8} xs={12}>
@@ -33,7 +66,7 @@ const OrdenCompra = (props) => {
             ENVÍO
           </Typography>
           <Typography variant="body2" className={classes.text_envio}>
-            Nombres: Boris Rojas
+            Nombres: {}
           </Typography>
           <Typography variant="body2" className={classes.text_envio}>
             Email: borisrojas@gmail.com
