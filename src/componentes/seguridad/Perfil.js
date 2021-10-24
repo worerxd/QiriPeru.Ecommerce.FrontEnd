@@ -21,6 +21,7 @@ import { useStateValue } from "../../contexto/store";
 import { v4 as uuidv4 } from "uuid";
 import { actualizarUsuario } from "../../actions/UsuarioAction";
 import { withRouter } from "react-router-dom";
+import { getListaOrdenCompra } from "../../actions/OrdenCompraAction";
 
 const Perfil = (props) => {
   const classes = useStyles();
@@ -29,6 +30,7 @@ const Perfil = (props) => {
     "https://www.pngfind.com/pngs/m/470-4703547_icon-user-icon-hd-png-download.png";
 
   const [{ sesionUsuario }, dispatch] = useStateValue();
+  const [pedidos, setPedidos] = useState([]);
   const [usuario, setUsuario] = useState({
     id: "",
     nombre: "",
@@ -51,6 +53,11 @@ const Perfil = (props) => {
   useEffect(() => {
     if (sesionUsuario) {
       setUsuario(sesionUsuario.usuario);
+      const getListaPedidos = async () => {
+        const response = await getListaOrdenCompra();
+        setPedidos(response.data);
+      };
+      getListaPedidos();
     }
   }, [sesionUsuario]);
 
@@ -92,8 +99,7 @@ const Perfil = (props) => {
 
   const keyImage = uuidv4();
 
-  const verDetalles = () => {
-    const id = "4f640d35-2b7b-423a-b4a2-b6715b9765bf";
+  const verDetalles = (id) => {
     props.history.push("/ordenCompra/" + id);
   };
 
@@ -195,29 +201,41 @@ const Perfil = (props) => {
               <TableHead>
                 <TableRow>
                   <TableCell>ID</TableCell>
-                  <TableCell>FECHA</TableCell>
+                  <TableCell>FECHA DE COMPRA</TableCell>
                   <TableCell>TOTAL</TableCell>
-                  <TableCell>PAGADO</TableCell>
-                  <TableCell>ENTREGADO</TableCell>
+                  <TableCell>TIPO DE ENVIO</TableCell>
+                  <TableCell>ENTREGA</TableCell>
                   <TableCell></TableCell>
                 </TableRow>
               </TableHead>
               <TableBody>
-                <TableRow>
-                  <TableCell>4f640d35-2b7b-423a-b4a2-b6715b9765bf</TableCell>
-                  <TableCell>2021-09-15</TableCell>
-                  <TableCell>123</TableCell>
-                  <TableCell>2021-09-12</TableCell>
-                  <TableCell>
-                    {/*<Icon className={classes.iconNotDelivered}>clear</Icon>*/}
-                    <Icon className={classes.iconDelivered}>check</Icon>
-                  </TableCell>
-                  <TableCell>
-                    <Button variant="contained" onClick={verDetalles}>
-                      DETALLES
-                    </Button>
-                  </TableCell>
-                </TableRow>
+                {pedidos.map((pedido) => (
+                  <TableRow key={pedido.id}>
+                    <TableCell>{pedido.id}</TableCell>
+                    <TableCell>
+                      {new Date(pedido.ordenCompraFecha).toLocaleString(
+                        "es-ES",
+                        {
+                          timeZone: "UTC",
+                        }
+                      )}
+                    </TableCell>
+                    <TableCell>{pedido.total}</TableCell>
+                    <TableCell>{pedido.tipoEnvio}</TableCell>
+                    <TableCell>
+                      {/*<Icon className={classes.iconNotDelivered}>clear</Icon>*/}
+                      <Icon className={classes.iconDelivered}>check</Icon>
+                    </TableCell>
+                    <TableCell>
+                      <Button
+                        variant="contained"
+                        onClick={() => verDetalles(pedido.id)}
+                      >
+                        DETALLES
+                      </Button>
+                    </TableCell>
+                  </TableRow>
+                ))}
               </TableBody>
             </Table>
           </TableContainer>

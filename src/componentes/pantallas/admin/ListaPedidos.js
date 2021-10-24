@@ -11,7 +11,7 @@ import {
   Typography,
 } from "@material-ui/core";
 import React, { useEffect, useState } from "react";
-import { getListaOrdenCompra } from "../../../actions/OrdenCompraAction";
+import { getAllListaOrdenCompra } from "../../../actions/OrdenCompraAction";
 import useStyles from "../../../theme/useStyles";
 
 const ListaPedidos = (props) => {
@@ -21,7 +21,7 @@ const ListaPedidos = (props) => {
 
   useEffect(() => {
     const getListaPedidos = async () => {
-      const response = await getListaOrdenCompra();
+      const response = await getAllListaOrdenCompra();
       setPedidos(response.data);
     };
     getListaPedidos();
@@ -54,7 +54,11 @@ const ListaPedidos = (props) => {
               <TableRow key={pedido.id}>
                 <TableCell>{pedido.id}</TableCell>
                 <TableCell>{pedido.compradorEmail}</TableCell>
-                <TableCell>{pedido.ordenCompraFecha}</TableCell>
+                <TableCell>
+                  {new Date(pedido.ordenCompraFecha).toLocaleString("es-ES", {
+                    timeZone: "UTC",
+                  })}
+                </TableCell>
                 <TableCell>{pedido.total}</TableCell>
                 <TableCell>{pedido.tipoEnvio}</TableCell>
                 <TableCell>

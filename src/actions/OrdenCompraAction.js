@@ -18,6 +18,18 @@ export const getListaOrdenCompra = () => {
   });
 };
 
+export const getAllListaOrdenCompra = () => {
+  return new Promise((resolve, eject) => {
+    HttpCliente.get(`/api/OrdenCompra/all`)
+      .then((response) => {
+        resolve(response);
+      })
+      .catch((error) => {
+        resolve(error.response);
+      });
+  });
+};
+
 export const getOrdenCompra = (id) => {
   return new Promise((resolve, eject) => {
     HttpCliente.get(`/api/OrdenCompra/${id}`)

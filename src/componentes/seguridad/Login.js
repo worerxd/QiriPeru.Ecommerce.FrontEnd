@@ -48,15 +48,6 @@ const Login = (props) => {
         });
       }
     });
-
-    /* const respuesta = acccesoUsuario(usuario);
-    if (!respuesta.status) {
-      console.log("Email y password incorrectos");
-      return;
-    }
-
-    setUsuario(clearUsuario);
-    console.log("Bienvenido", respuesta.miUsuario.nombre); */
   };
 
   return (

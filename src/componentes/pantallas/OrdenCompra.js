@@ -20,11 +20,12 @@ const OrdenCompra = (props) => {
   const classes = useStyles();
 
   const { id } = props.match.params;
-  const mensajeEnvio = "No entregado";
+  const mensajeEnvioPendiente = "No entregado";
   const mensajePago = "Pagado en 2021-09-06";
 
   const [pedido, setPedido] = useState({
     id: 0,
+    fullName: "",
     compradorEmail: "",
     ordenCompraFecha: "",
     direccionEnvio: {
@@ -48,6 +49,7 @@ const OrdenCompra = (props) => {
       setPedido(response.data);
     };
 
+    console.log("pedido", pedido);
     getOrdenCompraDetalle();
   }, []);
 
@@ -66,19 +68,35 @@ const OrdenCompra = (props) => {
             ENVÍO
           </Typography>
           <Typography variant="body2" className={classes.text_envio}>
-            Nombres: {}
+            Nombres: {pedido.fullName}
           </Typography>
           <Typography variant="body2" className={classes.text_envio}>
-            Email: borisrojas@gmail.com
+            Email: {pedido.compradorEmail}
           </Typography>
           <Typography variant="body2" className={classes.text_envio}>
-            Dirección: Urb. 2da Entrada Palao - Lima - Perú.
+            Dirección:{" "}
+            {pedido.direccionEnvio.calle +
+              " - " +
+              pedido.direccionEnvio.ciudad +
+              " - " +
+              pedido.direccionEnvio.pais}
+            .
           </Typography>
-          <div className={classes.alertNotDelivered}>
-            <Typography variant="body2" className={classes.text_title}>
-              {mensajeEnvio}
-            </Typography>
-          </div>
+          {console.log(pedido.status)}
+          {pedido.status === "Pendiente" && (
+            <div className={classes.alertNotDelivered}>
+              <Typography variant="body2" className={classes.text_title}>
+                {mensajeEnvioPendiente}
+              </Typography>
+            </div>
+          )}
+          {pedido.status === "Entregado" && (
+            <div className={classes.alertDelivered}>
+              <Typography variant="body2" className={classes.text_title}>
+                Entregado
+              </Typography>
+            </div>
+          )}
           <Divider className={classes.divider} />
           <Typography variant="h6" className={classes.text_title}>
             MÉTODO DE PAGO
@@ -86,7 +104,9 @@ const OrdenCompra = (props) => {
           <Typography>Método: Paypal</Typography>
           <div className={classes.alertDelivered}>
             <Typography variant="body2" className={classes.text_title}>
-              {mensajePago}
+              {new Date(pedido.ordenCompraFecha).toLocaleString("es-ES", {
+                timeZone: "UTC",
+              })}
             </Typography>
           </div>
           <Divider className={classes.divider} />
@@ -96,25 +116,31 @@ const OrdenCompra = (props) => {
           <TableContainer className={classes.gridmb}>
             <Table>
               <TableBody>
-                <TableRow>
-                  <TableCell>
-                    <CardMedia
-                      className={classes.imgProductoPC}
-                      image="http://standsyexpos.com/wp-content/gallery/escritorios-gamer/Become-con-repisas.png"
-                      title="imagen en proceso compra"
-                    />
-                  </TableCell>
-                  <TableCell>
-                    <Typography className={classes.text_detalle}>
-                      Puerta principal en madera
-                    </Typography>
-                  </TableCell>
-                  <TableCell>
-                    <Typography className={classes.text_detalle}>
-                      2 x S/123 = S/246
-                    </Typography>
-                  </TableCell>
-                </TableRow>
+                {pedido.ordenItems.map((item) => (
+                  <TableRow key={item.productoId}>
+                    <TableCell>
+                      <CardMedia
+                        className={classes.imgProductoPC}
+                        image={item.productoImagen}
+                        title="imagen en proceso compra"
+                      />
+                    </TableCell>
+                    <TableCell>
+                      <Typography className={classes.text_detalle}>
+                        {item.productoNombre}
+                      </Typography>
+                    </TableCell>
+                    <TableCell>
+                      <Typography className={classes.text_detalle}>
+                        {item.cantidad +
+                          " x " +
+                          item.precio +
+                          " = " +
+                          item.cantidad * item.precio}
+                      </Typography>
+                    </TableCell>
+                  </TableRow>
+                ))}
               </TableBody>
             </Table>
           </TableContainer>
@@ -138,30 +164,27 @@ const OrdenCompra = (props) => {
                   </TableCell>
                   <TableCell>
                     <Typography className={classes.text_title}>
-                      S/246
+                      {pedido.subTotal}
                     </Typography>
                   </TableCell>
                 </TableRow>
                 <TableRow>
                   <TableCell>
                     <Typography className={classes.text_title}>
-                      Envío
+                      {pedido.tipoEnvio
+                        .replace(/([A-Z])/g, " $1")
+                        .replace(/^./, function (str) {
+                          return str.toUpperCase();
+                        })}
                     </Typography>
                   </TableCell>
-                  <TableCell>
-                    <Typography className={classes.text_title}>S/2</Typography>
-                  </TableCell>
-                </TableRow>
-                <TableRow>
                   <TableCell>
                     <Typography className={classes.text_title}>
-                      Impuesto
+                      S/ {pedido.tipoEnvioPrecio}
                     </Typography>
                   </TableCell>
-                  <TableCell>
-                    <Typography className={classes.text_title}>S/8</Typography>
-                  </TableCell>
                 </TableRow>
+
                 <TableRow>
                   <TableCell>
                     <Typography className={classes.text_title}>
@@ -170,7 +193,7 @@ const OrdenCompra = (props) => {
                   </TableCell>
                   <TableCell>
                     <Typography className={classes.text_title}>
-                      S/256
+                      S/ {" " + pedido.total}
                     </Typography>
                   </TableCell>
                 </TableRow>
