@@ -41,3 +41,15 @@ export const getOrdenCompra = (id) => {
       });
   });
 };
+
+export const registrarOrdenCompra = async (ordenCompra) => {
+  return new Promise((resolve, eject) => {
+    HttpCliente.post("/api/OrdenCompra", ordenCompra)
+      .then((response) => {
+        resolve(response);
+      })
+      .catch((error) => {
+        resolve(error.response);
+      });
+  });
+};

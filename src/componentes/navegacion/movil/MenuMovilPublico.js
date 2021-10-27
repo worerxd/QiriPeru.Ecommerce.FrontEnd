@@ -20,28 +20,28 @@ const MenuMovilPublico = (props) => {
         </Link>
       </ListItem>
       <ListItem
-                    button
-                    onClick={props.clickHandler}
-                    className={classes.listItem}
-                  >
-                    <Link
-                      to="/contact"
-                      color="inherit"
-                      className={classes.linkAppBarMobile}
-                      underline="none"
-                    >
-                      <ListItemIcon className={classes.listItemIcon}>
-                        <Icon>contact_page</Icon>
-                      </ListItemIcon>
-                      <ListItemText>Contact</ListItemText>
-                    </Link>
-                  </ListItem>
+        button
+        onClick={props.clickHandler}
+        className={classes.listItem}
+      >
+        <Link
+          to="/contact"
+          color="inherit"
+          className={classes.linkAppBarMobile}
+          underline="none"
+        >
+          <ListItemIcon className={classes.listItemIcon}>
+            <Icon>contact_page</Icon>
+          </ListItemIcon>
+          <ListItemText>Contact</ListItemText>
+        </Link>
+      </ListItem>
       <ListItem
         button
         onClick={props.clickHandler}
         className={classes.listItem}
       >
-        <Link to="/login" className={classes.linkAppBarMobile}>
+        <Link to="/carrito" className={classes.linkAppBarMobile}>
           <ListItemIcon className={classes.listItemIcon}>
             <Icon>shopping_cart</Icon>
           </ListItemIcon>

@@ -17,10 +17,15 @@ import MenuAdmin from "./desktop/MenuAdmin";
 import MenuMovil from "./movil/MenuMovil";
 import MenuMovilPublico from "./movil/MenuMovilPublico";
 import MenuPublico from "./desktop/MenuPublico";
+import { useStateValue } from "../../contexto/store";
 
 const MenuAppBar = () => {
   const [open, setOpen] = useState(false);
   const classes = useStyles();
+
+  const [{ sesionUsuario }, dispatch] = useStateValue();
+
+  console.log("SesionUsuario", sesionUsuario);
 
   const openToggle = () => {
     setOpen(true);
@@ -50,8 +55,24 @@ const MenuAppBar = () => {
             <Drawer open={open} onClose={closeToggle}>
               <div className={classes.list}>
                 <List>
-                  {/* <MenuMovilPublico clickHandler={closeToggle} /> */}
-                  <MenuMovil clickHandler={closeToggle} />
+                  {sesionUsuario ? (
+                    !sesionUsuario.autenticado ? (
+                      <MenuMovilPublico clickHandler={closeToggle} />
+                    ) : (
+                      ""
+                    )
+                  ) : (
+                    ""
+                  )}
+                  {sesionUsuario ? (
+                    sesionUsuario.autenticado ? (
+                      <MenuMovil clickHandler={closeToggle} />
+                    ) : (
+                      ""
+                    )
+                  ) : (
+                    ""
+                  )}
                 </List>
               </div>
             </Drawer>
@@ -80,9 +101,37 @@ const MenuAppBar = () => {
                   CONTACT
                 </Link>
               </Button>
-              {/* <MenuPublico /> */}
-              <MenuCliente />
-              <MenuAdmin />
+              {sesionUsuario ? (
+                !sesionUsuario.autenticado ? (
+                  <MenuPublico />
+                ) : (
+                  ""
+                )
+              ) : (
+                ""
+              )}
+              {sesionUsuario ? (
+                sesionUsuario.autenticado ? (
+                  <MenuCliente />
+                ) : (
+                  ""
+                )
+              ) : (
+                ""
+              )}
+              {sesionUsuario ? (
+                sesionUsuario.usuario ? (
+                  sesionUsuario.usuario.admin ? (
+                    <MenuAdmin />
+                  ) : (
+                    ""
+                  )
+                ) : (
+                  ""
+                )
+              ) : (
+                ""
+              )}
             </div>
           </Toolbar>
         </Container>

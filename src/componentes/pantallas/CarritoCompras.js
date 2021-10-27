@@ -27,9 +27,7 @@ const CarritoCompras = (props) => {
 
   console.log("sesionCarritoCompra", sesionCarritoCompra);
 
-  const miArray = sesionCarritoCompra
-    ? sesionCarritoCompra.items
-    : []; /* ProductoArray */
+  const miArray = sesionCarritoCompra ? sesionCarritoCompra.items : [];
   let suma = 0;
   miArray.forEach((prod) => {
     suma += prod.precio * prod.cantidad;

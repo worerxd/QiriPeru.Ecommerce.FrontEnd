@@ -106,59 +106,89 @@ const MenuMovil = (props) => {
         </List>
       </Collapse>
       {/* admin */}
-      <ListItem onClick={handleClickAdmin} button className={classes.listItem}>
-        <div className={classes.linkAppBarMobile}>
-          <ListItemIcon className={classes.listItemIcon}>
-            <Icon>admin_panel_settings</Icon>
-          </ListItemIcon>
-          <ListItemText>Admin</ListItemText>
-          <Icon>keyboard_arrow_down</Icon>
-        </div>
-      </ListItem>
-      <Collapse component="li" in={openAdmin} timeout="auto" unmountOnExit>
-        <List disablePadding>
-          <ListItem
-            button
-            className={classes.listSubItem}
-            onClick={props.clickHandler}
-          >
-            <Link className={classes.linkAppBarMobile} to="/admin/usuarios">
-              <ListItemIcon className={classes.listItemIcon}>
-                <Icon>group</Icon>
-              </ListItemIcon>
-              <ListItemText>Usuarios</ListItemText>
-            </Link>
-          </ListItem>
-          <ListItem
-            button
-            className={classes.listSubItem}
-            onClick={props.clickHandler}
-          >
-            <Link
-              className={classes.linkAppBarMobile}
-              to="/admin/listaProductos"
-            >
-              <ListItemIcon className={classes.listItemIcon}>
-                <Icon>storefront</Icon>
-              </ListItemIcon>
-              <ListItemText>Productos</ListItemText>
-            </Link>
-          </ListItem>
-          <ListItem
-            button
-            className={classes.listSubItem}
-            onClick={props.clickHandler}
-          >
-            <Link className={classes.linkAppBarMobile} to="/admin/listaPedidos">
-              <ListItemIcon className={classes.listItemIcon}>
-                <Icon>shopping_cart</Icon>
-              </ListItemIcon>
-              <ListItemText>Pedidos</ListItemText>
-            </Link>
-          </ListItem>
-          <Divider />
-        </List>
-      </Collapse>
+      {sesionUsuario ? (
+        sesionUsuario.usuario ? (
+          sesionUsuario.usuario.admin ? (
+            <>
+              <ListItem
+                onClick={handleClickAdmin}
+                button
+                className={classes.listItem}
+              >
+                <div className={classes.linkAppBarMobile}>
+                  <ListItemIcon className={classes.listItemIcon}>
+                    <Icon>admin_panel_settings</Icon>
+                  </ListItemIcon>
+                  <ListItemText>Admin</ListItemText>
+                  <Icon>keyboard_arrow_down</Icon>
+                </div>
+              </ListItem>
+              <Collapse
+                component="li"
+                in={openAdmin}
+                timeout="auto"
+                unmountOnExit
+              >
+                <List disablePadding>
+                  <ListItem
+                    button
+                    className={classes.listSubItem}
+                    onClick={props.clickHandler}
+                  >
+                    <Link
+                      className={classes.linkAppBarMobile}
+                      to="/admin/usuarios"
+                    >
+                      <ListItemIcon className={classes.listItemIcon}>
+                        <Icon>group</Icon>
+                      </ListItemIcon>
+                      <ListItemText>Usuarios</ListItemText>
+                    </Link>
+                  </ListItem>
+                  <ListItem
+                    button
+                    className={classes.listSubItem}
+                    onClick={props.clickHandler}
+                  >
+                    <Link
+                      className={classes.linkAppBarMobile}
+                      to="/admin/listaProductos"
+                    >
+                      <ListItemIcon className={classes.listItemIcon}>
+                        <Icon>storefront</Icon>
+                      </ListItemIcon>
+                      <ListItemText>Productos</ListItemText>
+                    </Link>
+                  </ListItem>
+                  <ListItem
+                    button
+                    className={classes.listSubItem}
+                    onClick={props.clickHandler}
+                  >
+                    <Link
+                      className={classes.linkAppBarMobile}
+                      to="/admin/listaPedidos"
+                    >
+                      <ListItemIcon className={classes.listItemIcon}>
+                        <Icon>shopping_cart</Icon>
+                      </ListItemIcon>
+                      <ListItemText>Pedidos</ListItemText>
+                    </Link>
+                  </ListItem>
+                  <Divider />
+                </List>
+              </Collapse>
+            </>
+          ) : (
+            ""
+          )
+        ) : (
+          ""
+        )
+      ) : (
+        ""
+      )}
+
       {/* fin admin */}
       <ListItem
         button
