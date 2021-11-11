@@ -89,7 +89,7 @@ const CarritoCompras = (props) => {
         <Grid item lg={3} md={4} sm={6} xs={12}>
           <Paper variant="outlined" square className={classes.papperPadding}>
             <Typography variant="h6" className={classes.text_title}>
-              SUBTOTAL ({miArray.length}) PRODUCTOS
+              SUBTOTAL ({miArray.length}) PRODUCTO({miArray.length >1 && "S" })
             </Typography>
             <Typography className={classes.text_title}>
               S/.{Math.round(suma * 100) / 100}
