@@ -83,9 +83,7 @@ const MenuAppBar = () => {
                 className={classes.linkAppBarLogo}
                 underline="none"
               >
-                <Icon className={classes.mr} fontSize="large">
-                  carpenter
-                </Icon>
+                <img src= "https://i.ibb.co/k3pv0JG/Sin-t-tulo.png" style={{width: 80}}/> 
                 <Typography variant="h5">QIRI PERU</Typography>
               </Link>
             </div>
