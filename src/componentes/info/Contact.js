@@ -26,7 +26,12 @@ const Contact = () => {
             </Typography>
             <br />
             <Typography variant="h6" color="primary" align="left">
-              CELULAR: 01-5285805
+              <div style={{ display: "flex" }}>
+                <div style={{ marginTop: 2 }}>
+                  <Icon fontSize="small">phone</Icon>
+                </div>
+                01-5285805
+              </div>
             </Typography>
             <form className={classes.form}>
               <Grid container spacing={2}>
