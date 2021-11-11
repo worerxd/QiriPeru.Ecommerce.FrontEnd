@@ -67,7 +67,7 @@ const ListaPedidos = (props) => {
                 <TableCell>
                   <Button
                     variant="contained"
-                    color="inherit"
+                    style={{background:"#43b609"}}
                     onClick={() => verDetalle(pedido.id)}
                   >
                     DETALLES
