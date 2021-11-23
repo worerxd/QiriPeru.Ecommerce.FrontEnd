@@ -8,6 +8,7 @@ import {
   Container,
   Grid,
   Typography,
+  TextField,
 } from "@material-ui/core";
 import { Pagination } from "@material-ui/lab";
 import React, { useEffect, useState } from "react";
@@ -27,6 +28,14 @@ const Productos = (props) => {
     search: "",
   });
   const [paginadorProductos, setPaginadorProductos] = useState({
+    count: 0,
+    pageIndex: 0,
+    pageSize: 0,
+    pageCount: 0,
+    data: [],
+  });
+
+  const [FiltroProductos, setFiltroProductos] = useState({
     count: 0,
     pageIndex: 0,
     pageSize: 0,
@@ -59,6 +68,20 @@ const Productos = (props) => {
     return null;
   }
 
+  const handleSearch = (event) => {
+    let value = event.target.value.toLowerCase();
+    console.log("Dato buscado",value);
+    
+    requestProductos.search=value;
+    const getListaProductos = async () => {
+      const response = await getProductos(requestProductos);
+      setPaginadorProductos(response.data);
+
+      console.log("respuesta",response);
+    };
+    getListaProductos();
+  };
+
   console.log(paginadorProductos.data);
 
   return (
@@ -66,6 +89,11 @@ const Productos = (props) => {
       <Typography variant="h4" className={classes.text_title}>
         Productos
       </Typography>
+      <TextField 
+          id="outlined-basic" 
+          label="Buscar" 
+          variant="outlined"
+          onChange={(event) =>handleSearch(event)} />
       <Grid container spacing={4}>
         {paginadorProductos.data.map((data) => (
           <Grid item lg={3} md={4} sm={6} xs={12} key={data.id}>
