@@ -16,7 +16,6 @@ import { Pagination } from "@material-ui/lab";
 import React, { useEffect, useState } from "react";
 import { getProductos } from "../../../actions/ProductoAction";
 import useStyles from "../../../theme/useStyles";
-import { ProductoArray } from "../../data/dataPrueba";
 
 const ListaProductos = (props) => {
   const classes = useStyles();
@@ -60,14 +59,11 @@ const ListaProductos = (props) => {
   };
 
   const handleSearch = (event) => {
-    let value = event.target.value.toLowerCase();
-    console.log("Dato buscado",value);
-    
-    requestProductos.search=value;
+    requestProductos.search=event.target.value.toLowerCase();
     const getListaProductos = async () => {
       const response = await getProductos(requestProductos);
       setPaginadorProductos(response.data);
-      console.log("respuesta",response);
+
     };
     getListaProductos();
   };
