@@ -22,7 +22,7 @@ const Contact = () => {
               <Icon className={classes.icon}>contact_page</Icon>
             </Avatar>
             <Typography variant="h5" color="primary">
-              CONTACTO
+              CONTACTO CON LA EMPRESA
             </Typography>
             <br />
             <Typography variant="h6" color="primary" align="left">
