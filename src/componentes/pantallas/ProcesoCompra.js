@@ -58,9 +58,9 @@ const ProcesoCompra = (props) => {
     },
   };
 
-  const [tipoEnvioPrecio, setTipoEnvioPrecio] = useState(15);
+  const [isValid, setIsValid] = useState(false);
 
-  console.log("sesionCarritoCompra", sesionCarritoCompra);
+  const [tipoEnvioPrecio, setTipoEnvioPrecio] = useState(15);
 
   const miArray = sesionCarritoCompra ? sesionCarritoCompra.items : [];
   let suma = 0;
@@ -77,10 +77,6 @@ const ProcesoCompra = (props) => {
     } else if (tipoEnvio === 3) {
       setTipoEnvioPrecio(5);
     } else setTipoEnvioPrecio(0);
-
-    console.log("direccion", shipAddress);
-    console.log("tipoEnvio", tipoEnvio);
-    console.log("ordenCompra", ordenCompra);
   };
 
   const retrocederProceso = () => {
@@ -103,6 +99,11 @@ const ProcesoCompra = (props) => {
       ...prev,
       [name]: value,
     }));
+    validateAddress();
+  };
+
+  const onHandleBlur = () => {
+    validateAddress();
   };
 
   const handleChangeSelect = (e) => {
@@ -124,6 +125,21 @@ const ProcesoCompra = (props) => {
   const onApprove = (data, actions) => {
     realizarPedido();
     return actions.order.capture();
+  };
+
+  const validateAddress = () => {
+    if (
+      shipAddress.calle.length > 0 &&
+      shipAddress.ciudad.length > 0 &&
+      shipAddress.departamento.length > 0 &&
+      shipAddress.pais.length > 0
+    ) {
+      setIsValid(true);
+    } else {
+      setIsValid(false);
+    }
+
+    console.log(isValid);
   };
 
   return (
@@ -155,6 +171,7 @@ const ProcesoCompra = (props) => {
                   name="calle"
                   value={shipAddress.calle}
                   onChange={handleChange}
+                  onBlur={onHandleBlur}
                   fullWidth
                   InputLabelProps={{ shrink: true }}
                   required
@@ -166,6 +183,7 @@ const ProcesoCompra = (props) => {
                   name="ciudad"
                   value={shipAddress.ciudad}
                   onChange={handleChange}
+                  onBlur={onHandleBlur}
                   fullWidth
                   InputLabelProps={{ shrink: true }}
                   required
@@ -177,6 +195,7 @@ const ProcesoCompra = (props) => {
                   name="departamento"
                   value={shipAddress.departamento}
                   onChange={handleChange}
+                  onBlur={onHandleBlur}
                   fullWidth
                   InputLabelProps={{ shrink: true }}
                   required
@@ -188,6 +207,7 @@ const ProcesoCompra = (props) => {
                   name="codigoPostal"
                   value={shipAddress.codigoPostal}
                   onChange={handleChange}
+                  onBlur={onHandleBlur}
                   fullWidth
                   InputLabelProps={{ shrink: true }}
                 />
@@ -198,6 +218,7 @@ const ProcesoCompra = (props) => {
                   name="pais"
                   value={shipAddress.pais}
                   onChange={handleChange}
+                  onBlur={onHandleBlur}
                   fullWidth
                   InputLabelProps={{ shrink: true }}
                   required
@@ -212,6 +233,7 @@ const ProcesoCompra = (props) => {
                   id="tipoEnvioSelect"
                   value={tipoEnvio}
                   onChange={handleChangeSelect}
+                  onBlur={onHandleBlur}
                   autoWidth
                   InputLabelProps={{ shrink: true }}
                   required
@@ -226,6 +248,7 @@ const ProcesoCompra = (props) => {
                 <Button
                   variant="contained"
                   color="primary"
+                  disabled={!isValid}
                   onClick={continuarProceso}
                 >
                   CONTINUAR
