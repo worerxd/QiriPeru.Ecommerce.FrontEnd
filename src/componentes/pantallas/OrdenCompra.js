@@ -13,7 +13,11 @@ import {
   Typography,
 } from "@material-ui/core";
 import React, { useEffect, useState } from "react";
-import { getOrdenCompra } from "../../actions/OrdenCompraAction";
+import {
+  getOrdenCompra,
+  updateOrdenCompraStatus,
+} from "../../actions/OrdenCompraAction";
+import { useStateValue } from "../../contexto/store";
 import useStyles from "../../theme/useStyles";
 
 const OrdenCompra = (props) => {
@@ -23,6 +27,7 @@ const OrdenCompra = (props) => {
   const mensajeEnvioPendiente = "No entregado";
   const mensajePago = "Pagado en 2021-09-06";
 
+  const [{ sesionUsuario }, dispatch] = useStateValue();
   const [pedido, setPedido] = useState({
     id: 0,
     fullName: "",
@@ -53,6 +58,11 @@ const OrdenCompra = (props) => {
     getOrdenCompraDetalle();
   }, []);
 
+  const handleClickDelivered = async () => {
+    await updateOrdenCompraStatus(id);
+    props.history.push("/admin/listaPedidos");
+  };
+
   return (
     <Container className={classes.containermt}>
       <Typography
@@ -82,7 +92,7 @@ const OrdenCompra = (props) => {
               pedido.direccionEnvio.pais}
             .
           </Typography>
-          {console.log(pedido.status)}
+
           {pedido.status === "Pendiente" && (
             <div className={classes.alertNotDelivered}>
               <Typography variant="body2" className={classes.text_title}>
@@ -90,10 +100,17 @@ const OrdenCompra = (props) => {
               </Typography>
             </div>
           )}
-          {pedido.status === "Entregado" && (
+          {pedido.status === "La orden fue entregada" && (
             <div className={classes.alertDelivered}>
               <Typography variant="body2" className={classes.text_title}>
-                Entregado
+                {pedido.status}
+              </Typography>
+            </div>
+          )}
+          {pedido.status === "La orden fue cancelada" && (
+            <div className={classes.alertNotDelivered}>
+              <Typography variant="body2" className={classes.text_title}>
+                {pedido.status}
               </Typography>
             </div>
           )}
@@ -104,6 +121,7 @@ const OrdenCompra = (props) => {
           <Typography>Método: Paypal</Typography>
           <div className={classes.alertDelivered}>
             <Typography variant="body2" className={classes.text_title}>
+              Fecha:{" "}
               {new Date(pedido.ordenCompraFecha).toLocaleString("es-ES", {
                 timeZone: "UTC",
               })}
@@ -197,33 +215,65 @@ const OrdenCompra = (props) => {
                     </Typography>
                   </TableCell>
                 </TableRow>
-                <TableRow>
-                  <TableCell colSpan={2}>
-                    {/*botón para el usuario */}
-                    {/* <Button
-                      fullWidth
-                      variant="contained"
-                      color="primary"
-                      size="large"
-                      className={classes.gridmb}
-                    >
-                      Paypal
-                    </Button>
-                    <Button fullWidth variant="contained" size="large">
-                      Tarjeta de Crédito o Débito
-                    </Button> */}
 
-                    {/* botón para el admin */}
-                    <Button
-                      variant="contained"
-                      color="primary"
-                      size="large"
-                      fullWidth
-                    >
-                      MARCAR COMO ENTREGADO
-                    </Button>
-                  </TableCell>
-                </TableRow>
+                {sesionUsuario ? (
+                  sesionUsuario.usuario ? (
+                    sesionUsuario.usuario.admin ? (
+                      pedido.status === "Pendiente" ? (
+                        <TableRow>
+                          <TableCell colSpan={2}>
+                            <Button
+                              onClick={handleClickDelivered}
+                              variant="contained"
+                              color="primary"
+                              size="large"
+                              fullWidth
+                            >
+                              MARCAR COMO ENTREGADO
+                            </Button>
+                          </TableCell>
+                        </TableRow>
+                      ) : (
+                        ""
+                      )
+                    ) : (
+                      ""
+                    )
+                  ) : (
+                    ""
+                  )
+                ) : (
+                  ""
+                )}
+                {sesionUsuario ? (
+                  sesionUsuario.usuario ? (
+                    sesionUsuario.usuario.admin ? (
+                      pedido.status === "La orden fue entregada" ? (
+                        <TableRow>
+                          <TableCell colSpan={2}>
+                            <Button
+                              onClick={handleClickDelivered}
+                              variant="contained"
+                              color="primary"
+                              size="large"
+                              fullWidth
+                            >
+                              MARCAR COMO CANCELADO
+                            </Button>
+                          </TableCell>
+                        </TableRow>
+                      ) : (
+                        ""
+                      )
+                    ) : (
+                      ""
+                    )
+                  ) : (
+                    ""
+                  )
+                ) : (
+                  ""
+                )}
               </TableBody>
             </Table>
           </TableContainer>

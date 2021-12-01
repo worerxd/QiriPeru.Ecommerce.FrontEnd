@@ -54,3 +54,19 @@ export const addItem = (carrito, item, dispatch) => {
 
   setCarritoCompra(dispatch, carrito);
 };
+
+export const deleteItem = (carrito, item, dispatch) => {
+  if (!carrito.items) {
+    carrito.items = [];
+  }
+
+  const newCar = carrito.items.filter((element) => element.id !== item.id);
+
+  console.log("Nuevo carrito: ", newCar);
+
+  carrito.items = newCar;
+
+  console.log("Carrito :", carrito.items);
+
+  setCarritoCompra(dispatch, carrito);
+};

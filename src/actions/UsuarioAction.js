@@ -18,6 +18,19 @@ export const getUsuarioById = (id) => {
   });
 };
 
+export const validarEmail = (email) => {
+  return new Promise((resolve, eject) => {
+    instancia
+      .get(`/api/usuario/emailvalido/${email}`)
+      .then((response) => {
+        resolve(response);
+      })
+      .catch((error) => {
+        resolve(error.response);
+      });
+  });
+};
+
 export const agregarRol = (id, role, dispatch) => {
   return new Promise((resolve, eject) => {
     HttpCliente.put(`/api/usuario/role/${id}`, role)

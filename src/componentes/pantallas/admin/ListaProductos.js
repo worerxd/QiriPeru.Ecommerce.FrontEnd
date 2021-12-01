@@ -10,6 +10,7 @@ import {
   TableHead,
   TableRow,
   Typography,
+  TextField,
 } from "@material-ui/core";
 import { Pagination } from "@material-ui/lab";
 import React, { useEffect, useState } from "react";
@@ -58,6 +59,19 @@ const ListaProductos = (props) => {
     props.history.push("/admin/editarProducto/" + id);
   };
 
+  const handleSearch = (event) => {
+    let value = event.target.value.toLowerCase();
+    console.log("Dato buscado",value);
+    
+    requestProductos.search=value;
+    const getListaProductos = async () => {
+      const response = await getProductos(requestProductos);
+      setPaginadorProductos(response.data);
+      console.log("respuesta",response);
+    };
+    getListaProductos();
+  };
+
   return (
     <Container className={classes.containermt}>
       <Grid container>
@@ -67,15 +81,16 @@ const ListaProductos = (props) => {
           </Typography>
         </Grid>
         <Grid item lg={6} sm={6} xs={12}>
-          <Button
-            variant="contained"
-            color="inherit"
-            className={classes.buttonAgregar}
-            onClick={agregarProducto}
-          >
+          <Button variant="contained" color="inherit" className={classes.buttonAgregar} onClick={agregarProducto}>
             <Icon>add</Icon>
             AGREGAR PRODUCTO
           </Button>
+        </Grid>
+        
+      </Grid>
+      <Grid container>
+        <Grid item lg={6} sm={6} xs={12}>
+          <TextField id="outlined-basic" label="Buscar" variant="outlined" onChange={(event) =>handleSearch(event)} />
         </Grid>
       </Grid>
       <TableContainer>

@@ -8,18 +8,15 @@ import {
   Container,
   Grid,
   Typography,
+  TextField,
 } from "@material-ui/core";
 import { Pagination } from "@material-ui/lab";
 import React, { useEffect, useState } from "react";
-import { addItem } from "../../actions/CarritoCompraAction";
 import { getProductos } from "../../actions/ProductoAction";
-import { useStateValue } from "../../contexto/store";
 import useStyles from "../../theme/useStyles";
 
 const Productos = (props) => {
   const classes = useStyles();
-
-  const [{ sesionCarritoCompra }, dispatch] = useStateValue();
 
   const [requestProductos, setRequestProductos] = useState({
     pageIndex: 1,
@@ -50,22 +47,35 @@ const Productos = (props) => {
     getListaProductos();
   }, [requestProductos]);
 
-  const verProducto = async (item) => {
+  const verProducto = async (id) => {
     /* await addItem(sesionCarritoCompra, item, dispatch); */
-    props.history.push("/detalleProducto/" + item.id);
+    props.history.push("/detalleProducto/" + id);
   };
 
   if (!paginadorProductos.data) {
     return null;
   }
 
-  console.log(paginadorProductos.data);
+  const handleSearch = (event) => {
+    requestProductos.search = event.target.value.toLowerCase();
+    const getListaProductos = async () => {
+      const response = await getProductos(requestProductos);
+      setPaginadorProductos(response.data);
+    };
+    getListaProductos();
+  };
 
   return (
     <Container className={classes.containermt}>
       <Typography variant="h4" className={classes.text_title}>
         Productos
       </Typography>
+      <TextField
+        id="outlined-basic"
+        label="Buscar"
+        variant="outlined"
+        onChange={(event) => handleSearch(event)}
+      />
       <Grid container spacing={4}>
         {paginadorProductos.data.map((data) => (
           <Grid item lg={3} md={4} sm={6} xs={12} key={data.id}>
@@ -103,7 +113,7 @@ const Productos = (props) => {
               </CardContent>
               <CardActions style={{ margin: "auto 5px 5px 5px" }}>
                 <Button
-                  onClick={() => verProducto(data)}
+                  onClick={() => verProducto(data.id)}
                   variant="contained"
                   color="primary"
                   fullWidth
