@@ -17,6 +17,7 @@ import {
   Typography,
 } from "@material-ui/core";
 import React from "react";
+import { deleteItem } from "../../actions/CarritoCompraAction";
 import { useStateValue } from "../../contexto/store";
 import useStyles from "../../theme/useStyles";
 import { ProductoArray } from "../data/dataPrueba";
@@ -35,6 +36,10 @@ const CarritoCompras = (props) => {
 
   const realizarCompra = () => {
     props.history.push("/procesoCompra");
+  };
+
+  const handleDeleteItem = async (item) => {
+    await deleteItem(sesionCarritoCompra, item, dispatch);
   };
 
   return (
@@ -76,7 +81,7 @@ const CarritoCompras = (props) => {
                       </Typography>
                     </TableCell>
                     <TableCell>
-                      <IconButton>
+                      <IconButton onClick={() => handleDeleteItem(item)}>
                         <Icon>delete</Icon>
                       </IconButton>
                     </TableCell>
@@ -89,7 +94,7 @@ const CarritoCompras = (props) => {
         <Grid item lg={3} md={4} sm={6} xs={12}>
           <Paper variant="outlined" square className={classes.papperPadding}>
             <Typography variant="h6" className={classes.text_title}>
-              SUBTOTAL ({miArray.length}) PRODUCTO({miArray.length >1 && "S" })
+              SUBTOTAL ({miArray.length}) PRODUCTO({miArray.length > 1 && "S"})
             </Typography>
             <Typography className={classes.text_title}>
               S/.{Math.round(suma * 100) / 100}

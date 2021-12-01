@@ -17,7 +17,7 @@ import useStyles from "../../../theme/useStyles";
 const ListaPedidos = (props) => {
   const classes = useStyles();
 
-  const [pedidos, setPedidos] = useState([]);
+  const [pedidos, setPedidos] = useState();
 
   useEffect(() => {
     const getListaPedidos = async () => {
@@ -67,7 +67,7 @@ const ListaPedidos = (props) => {
                 <TableCell>
                   <Button
                     variant="contained"
-                    style={{background:"#43b609"}}
+                    style={{ background: "#43b609" }}
                     onClick={() => verDetalle(pedido.id)}
                   >
                     DETALLES

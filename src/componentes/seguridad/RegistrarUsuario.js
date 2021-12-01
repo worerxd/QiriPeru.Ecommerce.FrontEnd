@@ -11,7 +11,7 @@ import {
 import React, { useState } from "react";
 import useStyles from "../../theme/useStyles";
 import { Link } from "react-router-dom";
-import { registrarUsuario } from "../../actions/UsuarioAction";
+import { registrarUsuario, validarEmail } from "../../actions/UsuarioAction";
 import { useStateValue } from "../../contexto/store";
 
 const RegistrarUsuario = (props) => {
@@ -24,6 +24,11 @@ const RegistrarUsuario = (props) => {
     userName: "",
   });
 
+  const [isUsed, setIsUsed] = useState();
+
+  const validUser =
+    "El email ya se encuentra registrado. Intente ingresar otro.";
+
   const handleChange = (e) => {
     const { name, value } = e.target;
     setUsuario((prev) => ({
@@ -32,12 +37,19 @@ const RegistrarUsuario = (props) => {
     }));
   };
 
-  const guardarUsuario = () => {
-    registrarUsuario(usuario, dispatch).then((response) => {
-      console.log("Objeto response que envía el servidor", response);
-      window.localStorage.setItem("token", response.data.token);
-      props.history.push("/");
-    });
+  const guardarUsuario = async () => {
+    const response = await validarEmail(usuario.email);
+    setIsUsed(response.data);
+    if (response.data) {
+      return;
+    } else {
+      console.log("pasaste");
+      registrarUsuario(usuario, dispatch).then((response) => {
+        console.log("Objeto response que envía el servidor", response);
+        window.localStorage.setItem("token", response.data.token);
+        props.history.push("/");
+      });
+    }
   };
 
   const classes = useStyles();
@@ -94,6 +106,7 @@ const RegistrarUsuario = (props) => {
                     value={usuario.email}
                     onChange={handleChange}
                   ></TextField>
+                  {isUsed && <span style={{ color: "red" }}>{validUser}</span>}
                 </Grid>
                 <Grid item md={12} xs={12} className={classes.gridmb}>
                   <TextField

@@ -42,6 +42,18 @@ export const getOrdenCompra = (id) => {
   });
 };
 
+export const updateOrdenCompraStatus = (id) => {
+  return new Promise((resolve, eject) => {
+    HttpCliente.put(`/api/OrdenCompra/${id}`)
+      .then((response) => {
+        resolve(response);
+      })
+      .catch((error) => {
+        resolve(error.response);
+      });
+  });
+};
+
 export const registrarOrdenCompra = async (ordenCompra) => {
   return new Promise((resolve, eject) => {
     HttpCliente.post("/api/OrdenCompra", ordenCompra)

@@ -143,7 +143,7 @@ const ProcesoCompra = (props) => {
         </Step>
       </Stepper>
       {activeStep === 1 ? (
-        <Grid md={6} xs={12} className={classes.gridPC}>
+        <Grid item md={6} xs={12} className={classes.gridPC}>
           <Typography variant="h6" className={classes.text_title}>
             DIRECCIÓN DE ENVIO DEL PRODUCTO
           </Typography>
@@ -157,6 +157,7 @@ const ProcesoCompra = (props) => {
                   onChange={handleChange}
                   fullWidth
                   InputLabelProps={{ shrink: true }}
+                  required
                 />
               </Grid>
               <Grid item xs={6}>
@@ -167,6 +168,7 @@ const ProcesoCompra = (props) => {
                   onChange={handleChange}
                   fullWidth
                   InputLabelProps={{ shrink: true }}
+                  required
                 />
               </Grid>
               <Grid item xs={6}>
@@ -177,6 +179,7 @@ const ProcesoCompra = (props) => {
                   onChange={handleChange}
                   fullWidth
                   InputLabelProps={{ shrink: true }}
+                  required
                 />
               </Grid>
               <Grid item xs={6}>
@@ -197,6 +200,7 @@ const ProcesoCompra = (props) => {
                   onChange={handleChange}
                   fullWidth
                   InputLabelProps={{ shrink: true }}
+                  required
                 />
               </Grid>
               <Grid item xs={12}>
@@ -210,6 +214,7 @@ const ProcesoCompra = (props) => {
                   onChange={handleChangeSelect}
                   autoWidth
                   InputLabelProps={{ shrink: true }}
+                  required
                 >
                   <MenuItem value={1}>Envío Rápido</MenuItem>
                   <MenuItem value={2}>Envío Regular</MenuItem>
