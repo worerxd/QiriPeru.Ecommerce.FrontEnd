@@ -51,15 +51,11 @@ export const getProductos = (request) => {
   });
 };
 
-export const getProductosPorNombre = (request) => {
+export const getProductosPorNombre = (search) => {
   return new Promise((resolve, eject) => {
-    instancia
-      .get(
-        `/api/producto?search=${request.search}`
-      )
-      .then((response) => {
-        resolve(response);
-      });
+    instancia.get(`/api/producto?search=${search}`).then((response) => {
+      resolve(response);
+    });
   });
 };
 

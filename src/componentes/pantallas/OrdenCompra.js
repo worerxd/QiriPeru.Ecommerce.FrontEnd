@@ -54,7 +54,6 @@ const OrdenCompra = (props) => {
       setPedido(response.data);
     };
 
-    console.log("pedido", pedido);
     getOrdenCompraDetalle();
   }, []);
 

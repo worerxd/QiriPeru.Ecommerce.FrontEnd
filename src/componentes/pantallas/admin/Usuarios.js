@@ -15,6 +15,7 @@ import useStyles from "../../../theme/useStyles";
 import { getUsuarios } from "../../../actions/UsuarioAction";
 import { Pagination } from "@material-ui/lab";
 import { withRouter } from "react-router-dom";
+import NotFound from "../../404/NotFound";
 
 const Usuarios = (props) => {
   const classes = useStyles();
@@ -33,6 +34,8 @@ const Usuarios = (props) => {
     data: [],
   });
 
+  const [isValid, setIsValid] = useState();
+
   const handleChange = (event, value) => {
     setRequestUsuarios((anterior) => ({
       ...anterior,
@@ -47,7 +50,12 @@ const Usuarios = (props) => {
   useEffect(() => {
     const getListaUsuarios = async () => {
       const response = await getUsuarios(requestUsuarios);
-      setPaginadorUsuarios(response.data);
+      if (!response) {
+        setIsValid(false);
+      } else {
+        setIsValid(true);
+        setPaginadorUsuarios(response.data);
+      }
     };
 
     getListaUsuarios();
@@ -55,47 +63,55 @@ const Usuarios = (props) => {
 
   return (
     <Container className={classes.containermt}>
-      <Typography variant="h4" className={classes.text_title}>
-        USUARIOS
-      </Typography>
-      <TableContainer>
-        <Table>
-          <TableHead>
-            <TableRow>
-              <TableCell>ID</TableCell>
-              <TableCell>USUARIO</TableCell>
-              <TableCell>EMAIL</TableCell>
-              <TableCell>USERNAME</TableCell>
-              <TableCell></TableCell>
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            {paginadorUsuarios.data.map((usuario) => (
-              <TableRow key={usuario.id}>
-                <TableCell>{usuario.id}</TableCell>
-                <TableCell>{usuario.nombre + " " + usuario.apellido}</TableCell>
-                <TableCell>{usuario.email}</TableCell>
-                <TableCell>{usuario.userName}</TableCell>
-                <TableCell>
-                  <Button
-                    variant="contained"
-                    color="primary"
-                    onClick={() => editaUsuario(usuario.id)}
-                  >
-                    <Icon>edit</Icon>
-                  </Button>
-                </TableCell>
-              </TableRow>
-            ))}
-          </TableBody>
-        </Table>
-      </TableContainer>
-      <Pagination
-        count={paginadorUsuarios.pageCount}
-        page={paginadorUsuarios.pageIndex}
-        size="small"
-        onChange={handleChange}
-      />
+      {!isValid ? (
+        <NotFound />
+      ) : (
+        <div>
+          <Typography variant="h4" className={classes.text_title}>
+            USUARIOS
+          </Typography>
+          <TableContainer>
+            <Table>
+              <TableHead>
+                <TableRow>
+                  <TableCell>ID</TableCell>
+                  <TableCell>USUARIO</TableCell>
+                  <TableCell>EMAIL</TableCell>
+                  <TableCell>USERNAME</TableCell>
+                  <TableCell></TableCell>
+                </TableRow>
+              </TableHead>
+              <TableBody>
+                {paginadorUsuarios.data.map((usuario) => (
+                  <TableRow key={usuario.id}>
+                    <TableCell>{usuario.id}</TableCell>
+                    <TableCell>
+                      {usuario.nombre + " " + usuario.apellido}
+                    </TableCell>
+                    <TableCell>{usuario.email}</TableCell>
+                    <TableCell>{usuario.userName}</TableCell>
+                    <TableCell>
+                      <Button
+                        variant="contained"
+                        color="primary"
+                        onClick={() => editaUsuario(usuario.id)}
+                      >
+                        <Icon>edit</Icon>
+                      </Button>
+                    </TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+          </TableContainer>
+          <Pagination
+            count={paginadorUsuarios.pageCount}
+            page={paginadorUsuarios.pageIndex}
+            size="small"
+            onChange={handleChange}
+          />
+        </div>
+      )}
     </Container>
   );
 };

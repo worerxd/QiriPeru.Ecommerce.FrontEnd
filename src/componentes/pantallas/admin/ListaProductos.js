@@ -61,13 +61,13 @@ const ListaProductos = (props) => {
 
   const handleSearch = (event) => {
     let value = event.target.value.toLowerCase();
-    console.log("Dato buscado",value);
-    
-    requestProductos.search=value;
+    console.log("Dato buscado", value);
+
+    requestProductos.search = value;
     const getListaProductos = async () => {
       const response = await getProductos(requestProductos);
       setPaginadorProductos(response.data);
-      console.log("respuesta",response);
+      console.log("respuesta", response);
     };
     getListaProductos();
   };
@@ -81,16 +81,25 @@ const ListaProductos = (props) => {
           </Typography>
         </Grid>
         <Grid item lg={6} sm={6} xs={12}>
-          <Button variant="contained" color="inherit" className={classes.buttonAgregar} onClick={agregarProducto}>
+          <Button
+            variant="contained"
+            color="inherit"
+            className={classes.buttonAgregar}
+            onClick={agregarProducto}
+          >
             <Icon>add</Icon>
             AGREGAR PRODUCTO
           </Button>
         </Grid>
-        
       </Grid>
       <Grid container>
         <Grid item lg={6} sm={6} xs={12}>
-          <TextField id="outlined-basic" label="Buscar" variant="outlined" onChange={(event) =>handleSearch(event)} />
+          <TextField
+            id="outlined-basic"
+            label="Buscar"
+            variant="outlined"
+            onChange={(event) => handleSearch(event)}
+          />
         </Grid>
       </Grid>
       <TableContainer>
@@ -107,7 +116,12 @@ const ListaProductos = (props) => {
           </TableHead>
           <TableBody>
             {paginadorProductos.data.map((producto) => (
-              <TableRow key={producto.id}>
+              <TableRow
+                key={producto.id}
+                style={{
+                  background: producto.stock > 0 ? "white" : "pink",
+                }}
+              >
                 <TableCell>{producto.id}</TableCell>
                 <TableCell>{producto.nombre}</TableCell>
                 <TableCell>{producto.precio}</TableCell>
@@ -120,9 +134,6 @@ const ListaProductos = (props) => {
                     color="primary"
                   >
                     <Icon>edit</Icon>
-                  </Button>
-                  <Button variant="contained" color="secondary">
-                    <Icon>delete</Icon>
                   </Button>
                 </TableCell>
               </TableRow>

@@ -72,9 +72,10 @@ const Productos = (props) => {
       </Typography>
       <TextField
         id="outlined-basic"
-        label="Buscar"
+        label="Buscar Producto"
         variant="outlined"
         onChange={(event) => handleSearch(event)}
+        style={{ marginBottom: 20, width: 285 }}
       />
       <Grid container spacing={4}>
         {paginadorProductos.data.map((data) => (
@@ -106,6 +107,21 @@ const Productos = (props) => {
                 >
                   {data.nombre}
                 </Typography>
+                {data.stock > 0 ? (
+                  ""
+                ) : (
+                  <Typography
+                    variant="h6"
+                    style={{
+                      display: "flex",
+                      color: "red",
+                      justifyContent: "end",
+                      fontWeight: 600,
+                    }}
+                  >
+                    Agotado
+                  </Typography>
+                )}
                 <Typography
                   className={classes.text_card}
                   style={{ display: "flex", color: "gray" }}
