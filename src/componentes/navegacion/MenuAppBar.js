@@ -83,6 +83,7 @@ const MenuAppBar = () => {
                 className={classes.linkAppBarLogo}
                 underline="none"
               >
+                <img src="/logoQiri.png" alt="logoQiri" width="70px" />
                 <Icon className={classes.mr} fontSize="large">
                   carpenter
                 </Icon>
